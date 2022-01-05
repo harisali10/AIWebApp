@@ -3,11 +3,38 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {Provider} from 'react-redux'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
+// store.subscribe(()=>{
+//   console.log(
+//     "Stor Changed"
+// ,
+// store.getState()
+//   )
+// })
+
+// store.dispatch({
+//     type:"REQUESTED_DOG",
+//       payload :{
+//           url:"http://www.google.com"
+//       }
+//   })
+//   console.log(store.getState());
+
+
+
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <App />,
   document.getElementById('root')
 );
 
