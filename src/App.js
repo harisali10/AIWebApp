@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-// import dotenv from "dotenv";
 import { Line, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from 'recharts';
-import {
-    Grid, Button, Select, FormControl, InputLabel, MenuItem, FormHelperText, TextField, Backdrop, CircularProgress, Drawer ,Snackbar 
-} from '@material-ui/core';
-// import Defaults from "../defaults"
+import { Grid, Select, Button, Divider, FormControl, InputLabel, MenuItem, FormHelperText, TextField, Backdrop, CircularProgress, Drawer, Snackbar } from '@material-ui/core';
 import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import constants from '../src/utilities/constants';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import queryString from 'query-string';
+// import { Button } from 'primereact/button';
+
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -49,45 +48,29 @@ const App = () => {
 
     useEffect(() => {
         getOptionList();
+        let params = queryString.parse(window.location.search)
+        localStorage.setItem("shop", params.shop)
     }, [])
 
     async function getOptionList() {
-        let options = await axios.get(`${constant.url}lookup/`)
+        document.body.style.zoom = "80%";
+        let options = await axios.post(`${constant.url}lookup`, {
+            Header: {
+                ShopURL: localStorage.getItem("shop")
+            }
+        })
         console.log({ options: options.data.Message })
         setOptions(options.data.Message)
 
     }
-
-
-    // Depreciated 
-    // const fetchData = async () => {
-    //     setMTable(true);
-    //     axios.post(`https://ai-apps.azurewebsites.net/api/v1/GetShopifyData`, {
-    //         Header: {
-    //             ClientID: 1,
-    //             ShopURL: process.env.SHOP
-    //         }
-    //     })
-    //         .then(function (response) {
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-
-    // }
-
 
     const fetchLogs = () => {
         setMTable(true);
         setLoading(true)
         axios.post(`${constant.url}GetPredictionResults`, {
             Header: {
-                ClientID: 1,
                 Type: 'Log',
-                // ClientName:ctx.state.shopify.id,
-                // APIKey:ctx.query.code,
-                ShopURL: process.env.SHOP
-                // AccessToken:ctx.state.shopify.accessToken
+                ShopURL: localStorage.getItem("shop")
             }
         })
             .then(function (response) {
@@ -104,12 +87,12 @@ const App = () => {
 
     const Dashboard = async () => {
         setMTable(false);
-        let payload = {
-            sku: '80V-HONEYMELLOW-3'
-        }
+        // let payload = {
+        //     sku: '80V-HONEYMELLOW-3'
+        // }
 
-        let GetData = await axios.post(`${constant.url}GetData`, payload)
-        setData(GetData.data.Message.rows)
+        // let GetData = await axios.post(`${constant.url}GetData`, payload)
+        // setData(GetData.data.Message.rows)
 
     }
 
@@ -120,15 +103,11 @@ const App = () => {
             Header: {
                 ClientID: 1,
                 Type: 'Result',
-                // ClientName:ctx.state.shopify.id,
-                // APIKey:ctx.query.code,
-                ShopURL: process.env.SHOP,
-                // AccessToken:ctx.state.shopify.accessToken
+                ShopURL: localStorage.getItem("shop")
             }
         })
             .then(function (response) {
                 setData((prevState) => ({ ...prevState, rows: response.data.Message.rows, columns: response.data.Message.columns, TableName: "Stock Out Dashboard" }))
-                // rows = response.Messaage.rows
                 setLoading(false)
             })
             .catch(function (error) {
@@ -151,9 +130,16 @@ const App = () => {
 
     }
 
-    const handleSkuChange = (val) => {
+    const handleSkuChange = async (val) => {
         setVisibleRight(false)
         console.log({ val })
+        setMTable(false);
+        setsku(val);
+        let payload = {
+            sku: val
+        }
+        let GetData = await axios.post(`${constant.url}GetData`, payload)
+        setData(GetData.data.Message.rows)
 
     }
 
@@ -161,65 +147,31 @@ const App = () => {
         setVisibleRight(true)
     }
 
+    const closeSku = () => {
+        setVisibleRight(false)
+    }
+
     return (
-        <>
-
-            {/* <Grid > */}
-            <Grid container spacing={0} style={{ paddingTop: 7, paddingBottom: 7, paddingLeft: 7 }}>
-                <Grid item xs={1}>
-                    <Button variant="outlined" onClick={fetchLogs} color="primary">Get Logs</Button>
-                </Grid>
-                <Grid item xs={1}>
-
-                    <Button onClick={fetchResults} variant="outlined" color="primary">Get Res </Button>
-
-                </Grid>
-
-                <Grid item xs={1}>
-                    <Button onClick={Dashboard} variant="outlined" color="primary">Dashboard</Button>
-
-                </Grid>
-                <Grid item xs={7}>
-
-                </Grid>
-
-
-                <Grid container item xs={2} justify="flex-end" style={{paddingRight:21}}>
-                    <Button variant="outlined"  onClick={openSku} color="primary" startIcon={<AddIcon />}>
-                        Add SKU
+        <div style={{ overflowX: 'hidden' }}>
+            <div><h1 style={{textAlign: 'center', fontFamily:'sans-serif', color:'#3f51b5'}}>The AI Systems</h1></div>
+            <Divider light />
+            <div className='p-grid' >
+                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 25 }} >
+                    <Button variant="contained" style={{ width: 150 }} onClick={fetchLogs} color="primary">Get Logs</Button>
+                </div>
+                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 50 }}>
+                    <Button onClick={fetchResults} style={{ width: 150 }} variant="contained" color="primary">Get Results </Button>
+                </div>
+                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 75 }}>
+                    <Button onClick={Dashboard} style={{ width: 150 }} variant="contained" color="primary">Dashboard</Button>
+                </div>
+                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 100 }}>
+                    <Button variant="contained" style={{ width: 150, }} onClick={openSku} color="primary" startIcon={<AddIcon />}>
+                        Select SKU
                     </Button>
-                    {/* <Button onClick={openSku} color="primary">Choose SKU</Button> */}
-                    {/* <TextField
-                        fullWidth
-                        label={"Please Select SKU"}
-                        variant="outlined"
-                        disabled={false}
-                        id={1}
-                        select
-                        value={sku}
-                        onChange={(e) => setsku(e.target.value)}
-                    // helperText={"Please Select Value"}
-                    >
-                        {optionsList.length ? optionsList.map((item, index) => (
-                            item.code ?
-                                <MenuItem key={index} value={item.code} className={classes.root}>
-                                    {item.value}
-                                </MenuItem>
-                                :
-                                <MenuItem key={index} value={item.sku} className={classes.root}>
-                                    {item.sku}
-                                </MenuItem>
-                        ))
-                            : <MenuItem className={classes.root}>
-                                No Options
-                            </MenuItem>
-                        }
-                    </TextField> */}
-
-                </Grid>
-
-            </Grid>
-
+                </div>
+            </div>
+            <Divider light />
 
 
             {MTable === true ?
@@ -265,9 +217,9 @@ const App = () => {
                 // actions={actionCol}
                 />
                 :
-                <div>
+                <div >
                     <ComposedChart
-                        width={2000}
+                        width={1580}
                         height={450}
                         data={data}
                         margin={{
@@ -276,6 +228,7 @@ const App = () => {
                             left: 20,
                             bottom: 5,
                         }}
+
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="WeekOfYear" />
@@ -288,7 +241,7 @@ const App = () => {
                     </ComposedChart>
 
                     <ComposedChart
-                        width={2000}
+                        width={1580}
                         height={450}
                         data={data}
                         margin={{
@@ -312,6 +265,7 @@ const App = () => {
 
             <Drawer elevation={0}
                 anchor={'right'}
+                onClose={closeSku}
                 open={visibleRight} >
                 <div style={{ padding: 30 }}>
                     <div style={{ backgroundColor: 'white', width: 300 }} />
@@ -320,8 +274,6 @@ const App = () => {
                             <h1 style={{ alignContent: 'center' }}>SKU's</h1>
                         </div>
                     </div>
-
-
 
                     <div className="p-grid">
 
@@ -340,7 +292,7 @@ const App = () => {
 
                 </div>
             </Drawer>
-        </>
+        </div>
     )
 }
 export default App;

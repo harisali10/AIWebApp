@@ -23,6 +23,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.ui-datagrid-content div {
+  margin: 30px;
+}
 
 .App-link {
   color: #61dafb;

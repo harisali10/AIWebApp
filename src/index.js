@@ -4,7 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux'
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import "primereact/resources/primereact.min.css";  
+import 'primeflex/primeflex.css';
+import 'primeicons/primeicons.css';
 
 
 
