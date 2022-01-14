@@ -6,8 +6,10 @@ import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import constants from '../src/utilities/constants';
 import AddIcon from '@material-ui/icons/Add';
+import { Toast } from 'primereact/toast';
 import CloseIcon from '@material-ui/icons/Close';
 import queryString from 'query-string';
+import Setups from './Setups/Setups';
 // import { Button } from 'primereact/button';
 
 
@@ -30,12 +32,14 @@ const constant = constants.getConstant();
 
 const App = () => {
     const classes = useStyles();
+    const toast = React.useRef(null);
     const [data, setData] = useState({ rows: [], columns: [], TableName: '' })
     const [MTable, setMTable] = useState(true)
     const [optionsList, setOptions] = useState([])
     const [sku, setsku] = useState('')
     const [loading, setLoading] = useState(false)
     const [visibleRight, setVisibleRight] = useState(false)
+    const [setupVisible, setSetupVisible] = useState(false)
 
 
     // Shopify.Context.initialize({
@@ -49,7 +53,8 @@ const App = () => {
     useEffect(() => {
         getOptionList();
         let params = queryString.parse(window.location.search)
-        localStorage.setItem("shop", params.shop)
+        localStorage.setItem("shop", params.shop);
+        fetchResults();
     }, [])
 
     async function getOptionList() {
@@ -59,14 +64,15 @@ const App = () => {
                 ShopURL: localStorage.getItem("shop")
             }
         })
-        console.log({ options: options.data.Message })
+        // console.log({ options: options.data.Message })
         setOptions(options.data.Message)
 
     }
 
     const fetchLogs = () => {
         setMTable(true);
-        setLoading(true)
+        setLoading(true);
+        setSetupVisible(false);
         axios.post(`${constant.url}GetPredictionResults`, {
             Header: {
                 Type: 'Log',
@@ -79,7 +85,7 @@ const App = () => {
                 setLoading(false)
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 setLoading(false)
             });
 
@@ -87,6 +93,7 @@ const App = () => {
 
     const Dashboard = async () => {
         setMTable(false);
+        setSetupVisible(false);
         // let payload = {
         //     sku: '80V-HONEYMELLOW-3'
         // }
@@ -98,7 +105,8 @@ const App = () => {
 
     const fetchResults = () => {
         setMTable(true);
-        setLoading(true)
+        setLoading(true);
+        setSetupVisible(false);
         axios.post(`${constant.url}GetPredictionResults`, {
             Header: {
                 ClientID: 1,
@@ -108,10 +116,13 @@ const App = () => {
         })
             .then(function (response) {
                 setData((prevState) => ({ ...prevState, rows: response.data.Message.rows, columns: response.data.Message.columns, TableName: "Stock Out Dashboard" }))
-                setLoading(false)
+                setLoading(false);
+                if(response.data.Success===false){
+                    toast.current.show({ severity: 'info', summary: 'No Source Setup found!', detail: "Please Create Source Setup to show records.", life: 3000 });
+                }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
                 setLoading(false)
             });
 
@@ -132,8 +143,9 @@ const App = () => {
 
     const handleSkuChange = async (val) => {
         setVisibleRight(false)
-        console.log({ val })
+        // console.log({ val })
         setMTable(false);
+        setSetupVisible(false);
         setsku(val);
         let payload = {
             sku: val
@@ -147,32 +159,42 @@ const App = () => {
         setVisibleRight(true)
     }
 
+    const openSetup = () => {
+        setSetupVisible(true);
+        setVisibleRight(false);
+        setMTable(false);
+    }
+
     const closeSku = () => {
         setVisibleRight(false)
     }
 
     return (
         <div style={{ overflowX: 'hidden' }}>
-            <div><h1 style={{textAlign: 'center', fontFamily:'sans-serif', color:'#3f51b5'}}>The AI Systems</h1></div>
+            <div className='p-grid p-justify-center' style={{height:130, position:'relative', bottom:38}}>
+                <img src="assets/logo/ai_web_logo.png" alt="logo" width="580px" height="220px" />
+                {/* <h1 style={{ textAlign: 'center', fontFamily: 'sans-serif', color: '#3f51b5' }}>The AI Systems</h1></div> */}
+            </div>
+            <Toast ref={toast} />
             <Divider light />
             <div className='p-grid' >
-                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 25 }} >
-                    <Button variant="contained" style={{ width: 150 }} onClick={fetchLogs} color="primary">Get Logs</Button>
+                <div className='p-col-2 p-md-1 p-lg-1' style={{ paddingTop: 15, marginLeft: 5 }}>
+                    <Button onClick={fetchResults} style={{ width: '100%' }} variant="contained" color="primary">Results</Button>
                 </div>
-                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 50 }}>
-                    <Button onClick={fetchResults} style={{ width: 150 }} variant="contained" color="primary">Get Results </Button>
+                <div className='p-col-3 p-md-1 p-lg-1' style={{ paddingTop: 15,  }}>
+                    <Button onClick={Dashboard} style={{ width: '100%', }} variant="contained" color="primary">Dashboard</Button>
                 </div>
-                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 75 }}>
-                    <Button onClick={Dashboard} style={{ width: 150 }} variant="contained" color="primary">Dashboard</Button>
+                <div className='p-col-2 p-md-1 p-lg-1' style={{ paddingTop: 15 }} >
+                    <Button variant="contained" style={{ width: '100%',  }} onClick={fetchLogs} color="primary">Logs</Button>
                 </div>
-                <div className='p-col-12 p-md-1' style={{ paddingTop:15, paddingLeft: 100 }}>
-                    <Button variant="contained" style={{ width: 150, }} onClick={openSku} color="primary" startIcon={<AddIcon />}>
-                        Select SKU
-                    </Button>
+                <div className='p-col-2 p-md-1 p-lg-1' style={{ paddingTop: 15, }}>
+                    <Button variant="contained" style={{ width: '100%' }} onClick={openSetup} color="primary" >Setup</Button>
+                </div>
+                <div className='p-col-2 p-md-1 p-lg-1' style={{ paddingTop: 15,  }}>
+                    <Button variant="contained" style={{ width: '100%', }} onClick={openSku} color="primary" startIcon={<AddIcon />}>SKU</Button>
                 </div>
             </div>
             <Divider light />
-
 
             {MTable === true ?
                 <MaterialTable
@@ -217,50 +239,53 @@ const App = () => {
                 // actions={actionCol}
                 />
                 :
-                <div >
-                    <ComposedChart
-                        width={1580}
-                        height={450}
-                        data={data}
-                        margin={{
-                            top: 50,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
+                setupVisible === true ?
+                    <Setups />
+                    :
+                    <div >
+                        <ComposedChart
+                            width={1580}
+                            height={450}
+                            data={data}
+                            margin={{
+                                top: 50,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}
 
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="WeekOfYear" />
-                        <YAxis yAxisId={"left"} type="number" domain={[0, 600]} />
-                        <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar yAxisId={"left"} dataKey="Opening_Stock" fill="#fc0324" />
-                        <Line yAxisId={"right"} dataKey="SS" fill="#03fc17" />
-                    </ComposedChart>
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="WeekOfYear" />
+                            <YAxis yAxisId={"left"} type="number" domain={[0, 600]} />
+                            <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar yAxisId={"left"} dataKey="Opening_Stock" fill="#fc0324" />
+                            <Line yAxisId={"right"} dataKey="SS" fill="#03fc17" />
+                        </ComposedChart>
 
-                    <ComposedChart
-                        width={1580}
-                        height={450}
-                        data={data}
-                        margin={{
-                            top: 50,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="WeekOfYear" />
-                        <YAxis yAxisId={"left"} type="number" domain={[0, 100]} />
-                        <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar yAxisId={"left"} dataKey="Sales" fill="#387318" />
-                        <Line yAxisId={"right"} type="monotone" dataKey="Purchases" fill="#704a1a" />
-                    </ComposedChart>
-                </div>
+                        <ComposedChart
+                            width={1580}
+                            height={450}
+                            data={data}
+                            margin={{
+                                top: 50,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="WeekOfYear" />
+                            <YAxis yAxisId={"left"} type="number" domain={[0, 100]} />
+                            <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar yAxisId={"left"} dataKey="Sales" fill="#387318" />
+                            <Line yAxisId={"right"} type="monotone" dataKey="Purchases" fill="#704a1a" />
+                        </ComposedChart>
+                    </div>
             }
 
             <Drawer elevation={0}
