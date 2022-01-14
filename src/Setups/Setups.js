@@ -7,6 +7,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
 import { Divider, Button } from '@material-ui/core';
+import { Circle, Spinner } from 'react-spinners-css';
 import constants from '../utilities/constants';
 
 const constant = constants.getConstant();
@@ -97,6 +98,7 @@ const Setups = (props) => {
     ];
     const toast = React.useRef(null);
     const [newData, setNewData] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [setupInitials, setSetupInitials] = useState({
         SetupName: '',
         SourceType: null,
@@ -144,11 +146,13 @@ const Setups = (props) => {
     });
 
     useEffect(() => {
+        setLoading(true);
         axios.post(`${constant.url}GetStockSetupSource`, { Header: { ShopURL: localStorage.getItem("shop") } })
             .then(function (response) {
                 if (response.data.Success === true) {
                     if (response.data.Message !== null) {
                         setNewData(false);
+                        setLoading(false);
                         let data = response.data.Message;
                         setSetupInitials((prev) => ({ ...prev, SetupName: data.SetupName, SourceType: { name: data.SourceType, code: data.SourceType }, SetupNameValidity: true, SourceTypeValidity: true }))
                         let configuationdata = JSON.parse(data.SourceConfiguration);
@@ -165,14 +169,17 @@ const Setups = (props) => {
                         setSetupSourceConfiguration((prev) => ({ ...prev, [data.SourceType]: configuationdata }));
                     }
                     else {
+                        setLoading(false);
                         setNewData(true);
                     }
                 }
                 else {
+                    setLoading(false);
                     toast.current.show({ severity: 'error', summary: 'Error Message', detail: response.data.Message, life: 3000 });
                 }
             })
             .catch(function (error) {
+                setLoading(false);
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
             });
     }, []);
@@ -554,42 +561,49 @@ const Setups = (props) => {
                 {/* <h3 style={{ alignContent: 'center' }}>Setup</h3> */}
             </div>
             <Toast ref={toast} />
-            <div className="p-grid">
-                <div className="p-col-10 p-md-10 p-lg-8 p-offset-1 p-md-offset-1 p-lg-offset-2">
-                    <Card title="Set up the Source">
-                        <Divider light style={{ marginBottom: 20 }} />
-                        <div className="p-grid">
-                            <div className="p-col-12 p-md-12 p-lg-12">
-                                <div className="p-field">
-                                    <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help you identify this source in Airbyte.</label>
-                                    <InputText value={setupInitials.SetupName} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SetupName: e.target.value, SetupNameValidity: true }))} id="name" style={{ width: '100%' }} aria-describedby="name-help" className={setupInitials.SetupNameValidity === false ? `p-invalid p-d-block` : `p-d-block`} />
-                                    {setupInitials.SetupNameValidity === false &&
-                                        <small id="name-help" className="p-error p-d-block">Name* is not available.</small>
-                                    }
+            {
+                loading === true ?
+                    <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
+                        <Spinner />
+                    </div>
+                    :
+                    <div className="p-grid">
+                        <div className="p-col-10 p-md-10 p-lg-8 p-offset-1 p-md-offset-1 p-lg-offset-2">
+                            <Card title="Set up the Source">
+                                <Divider light style={{ marginBottom: 20 }} />
+                                <div className="p-grid">
+                                    <div className="p-col-12 p-md-12 p-lg-12">
+                                        <div className="p-field">
+                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help you identify this source in Airbyte.</label>
+                                            <InputText value={setupInitials.SetupName} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SetupName: e.target.value, SetupNameValidity: true }))} id="name" style={{ width: '100%' }} aria-describedby="name-help" className={setupInitials.SetupNameValidity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                            {setupInitials.SetupNameValidity === false &&
+                                                <small id="name-help" className="p-error p-d-block">Name* is not available.</small>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className="p-col-12 p-md-12 p-lg-12">
+                                        <div className="p-field">
+                                            <label htmlFor="sourcetype" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Source type</span></label>
+                                            <Dropdown id="sourcetype" style={{ width: '100%' }} value={setupInitials.SourceType} options={sourceTypes} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SourceType: e.value, SourceTypeValidity: true }))} optionLabel="name" placeholder="Select a Source type" aria-describedby="sourcetype-help" className={setupInitials.SourceTypeValidity === false ? `p-invalid` : ``} />
+                                            {setupInitials.SourceTypeValidity === false &&
+                                                <small id="sourcetype-help" className="p-error p-d-block">Source type is not available.</small>
+                                            }
+                                        </div>
+                                    </div>
+                                    {renderFields()}
+                                    {setupInitials.SourceType !== null && setupInitials.SourceType.code === "MySql" && renderSubfieldsformysqlsshtunnelmethod()}
                                 </div>
-                            </div>
-                            <div className="p-col-12 p-md-12 p-lg-12">
-                                <div className="p-field">
-                                    <label htmlFor="sourcetype" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Source type</span></label>
-                                    <Dropdown id="sourcetype" style={{ width: '100%' }} value={setupInitials.SourceType} options={sourceTypes} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SourceType: e.value, SourceTypeValidity: true }))} optionLabel="name" placeholder="Select a Source type" aria-describedby="sourcetype-help" className={setupInitials.SourceTypeValidity === false ? `p-invalid` : ``} />
-                                    {setupInitials.SourceTypeValidity === false &&
-                                        <small id="sourcetype-help" className="p-error p-d-block">Source type is not available.</small>
-                                    }
+                                <div className="p-grid">
+                                    <div className="p-col-3 p-md-3 p-lg-3">
+                                        {/* <div className='p-col-12 p-md-1' style={{ marginLeft: 42 }}> */}
+                                        <Button onClick={createStockSetup} style={{ width: 200 }} variant="contained" color="primary">Set up source</Button>
+                                        {/* </div> */}
+                                    </div>
                                 </div>
-                            </div>
-                            {renderFields()}
-                            {setupInitials.SourceType !== null && setupInitials.SourceType.code === "MySql" && renderSubfieldsformysqlsshtunnelmethod()}
+                            </Card>
                         </div>
-                        <div className="p-grid">
-                            <div className="p-col-3 p-md-3 p-lg-3">
-                                {/* <div className='p-col-12 p-md-1' style={{ marginLeft: 42 }}> */}
-                                    <Button onClick={createStockSetup} style={{ width: 200 }} variant="contained" color="primary">Set up source</Button>
-                                {/* </div> */}
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-            </div>
+                    </div>
+            }
         </div>
     )
 }
