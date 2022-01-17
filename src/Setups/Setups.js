@@ -284,6 +284,7 @@ const Setups = (props) => {
                     else {
                         setLoading(false);
                         setNewData(true);
+                        toast.current.show({ severity: 'info', summary: 'No Source Setup found!', detail: "Please Create Source Setup to show records.", life: 3000 });
                     }
                 }
                 else {
@@ -349,8 +350,8 @@ const Setups = (props) => {
                 return null;
             }
         }
-        else if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethodCertificate !== null) {
-            if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethodCertificate.code === "EncryptedVerifyCertificate") {
+        else if (setupsourceConfiguration.MSSQL.sshtunnelmethodCertificate !== null) {
+            if (setupsourceConfiguration.MSSQL.sshtunnelmethodCertificate.code === "EncryptedVerifyCertificate") {
                 filtereditem = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MSSQL.sshtunnelmethodCertificate.code);
                 newfields = filtereditem[0].field.map((item, index) => {
                     return (
@@ -370,7 +371,7 @@ const Setups = (props) => {
                         </div>
                     )
                 })
-                return newfields
+                return newfields;
             }
             else {
                 return null;
