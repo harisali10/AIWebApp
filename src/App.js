@@ -214,7 +214,8 @@ const App = () => {
             {MTable === true ?
                 <MaterialTable
                     style={{
-                        padding: '10px'
+                        padding: '10px',
+                        boxShadow:'none'
                     }}
                     title=
                     {
