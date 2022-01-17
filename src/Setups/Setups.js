@@ -64,7 +64,76 @@ const fields = [
             { fieldName: 'Store Hash*', id: 'storehash', type: 'text', validity: true, hints: "The hash code of the store. For https://api.bigcommerce.com/stores/HASH_CODE/v3/, The store's hash code is 'HASH_CODE'." },
             { fieldName: 'Access Token*', id: 'accesstoken', type: 'text', validity: true, hints: 'Access Token for making authenticated requests.' },
         ]
-    }
+    },
+    {
+        sourcetype: 'MongoDB', field: [
+            { fieldName: 'Database Name*', id: 'databaseName', type: 'text', validity: true, hints: ' The database you want to replicate.' },
+            { fieldName: 'User*', id: 'user', type: 'text', validity: true, hints: 'The username which is used to access the database.' },
+            { fieldName: 'Password*', id: 'password', type: 'text', validity: true, hints: 'The password associated with this username.' },
+            { fieldName: 'Authentication Source', id: 'authenticationSource', type: 'text', validity: true, hints: 'The authentication source where the user information is stored. (e.g. admin)' },
+            {
+                fieldName: 'MongoDb Instance Type',
+                id: 'mongoDBInstance',
+                type: 'dropdown',
+                validity: true,
+                hints: 'The MongoDb instance to connect to. For MongoDB Atlas and Replica Set TLS connection is used by default.',
+                dropdownlist: [
+                    { name: 'Standalone MongoDB Instance', code: 'standaloneMongodbInstance' },
+                    { name: 'Replica Set', code: 'replicaSet' },
+                    { name: 'MongoDB Atlas', code: 'mongodbAtlas' },
+                ]
+            },
+            { fieldName: 'Host*', id: 'host', type: 'text', validity: true, hints: ' The host name of the Mongo database.' },
+            { fieldName: 'Port*', id: 'port', type: 'text', validity: true, hints: 'The port of the Mongo database. (e.g. 27017)' },
+            { fieldName: 'TLS Connection*', id: 'tlsConnection', type: 'toggle', validity: true, hints: 'Indicates whether TLS encryption protocol will be used to connect to MongoDB. It is recommended to use TLS connection if possible.' }
+        ]
+    },
+    {
+        sourcetype: 'MSSQL', field: [
+            { fieldName: 'Host*', id: 'host', type: 'text', validity: true, hints: 'The host name of the database.' },
+            { fieldName: 'Port*', id: 'port', type: 'text', validity: true, hints: 'The port to connect to. (e.g. 1433)' },
+            { fieldName: 'Databse*', id: 'database', type: 'text', validity: true, hints: 'The name of the database. (e.g. master)' },
+            { fieldName: 'Username*', id: 'username', type: 'text', validity: true, hints: 'The username which is used to access the database.' },
+            { fieldName: 'Password*', id: 'password', type: 'text', validity: true, hints: 'The password associated with the username.' },
+            { fieldName: 'JDBC URL Params', id: 'jdbcurlparams', type: 'text', validity: true, hints: "Additional properties to pass to the jdbc url string when connecting to the database formatted as 'key=value' pairs separated by the symbol '&'. (example: key1=value1&key2=value2&key3=value3)." },
+            { fieldName: 'SSL Connection', id: 'sslConnection', type: 'toggle', validity: true, hints: 'Encrypt data using SSL.' },
+            {
+                fieldName: 'Replication Method*',
+                id: 'replicationmethod',
+                type: 'dropdown',
+                validity: true,
+                hints: 'Replication method which is used for data extraction from the database. STANDARD replication requires no setup on the DB side but will not be able to represent deletions incrementally. CDC uses the Binlog to detect inserts, updates, and deletes. This needs to be configured on the source database itself.',
+                dropdownlist: [
+                    { name: 'Standard', code: 'Standard' },
+                    { name: 'CDC', code: 'CDC' },
+                ]
+            },
+            {
+                fieldName: 'SSH Tunnel Method',
+                id: 'sshtunnelmethodCertificate',
+                type: 'dropdown',
+                validity: true,
+                hints: 'The encryption method which is used when communicating with the database.',
+                dropdownlist: [
+                    { name: 'Unencrypted', code: 'unencrypted' },
+                    { name: 'Encrypted (trust server certificate)', code: 'encryptedTrustServerCertificate' },
+                    { name: 'Encrypted (Verify certificate)', code: 'EncryptedVerifyCertificate' },
+                ]
+            },
+            {
+                fieldName: 'SSH Tunnel Method',
+                id: 'sshtunnelmethod',
+                type: 'dropdown',
+                validity: true,
+                hints: 'Whether to initiate an SSH tunnel before connecting to the database, and if so, which kind of authentication to use.',
+                dropdownlist: [
+                    { name: 'No tunnel', code: 'Notunnel' },
+                    { name: 'SSH Key Authentication', code: 'SSHKeyAuthentication' },
+                    { name: 'Password Authentication', code: 'PasswordAuthentication' },
+                ]
+            }
+        ]
+    },
 ]
 
 const subFields = [
@@ -85,6 +154,12 @@ const subFields = [
             { fieldName: 'SSH Login Username*', id: 'sshloginusernamepassauth', type: 'text', validity: true, hints: 'OS-level username for logging into the jump server host.' },
             { fieldName: 'Password*', id: 'sshpasswordpassauth', type: 'text', validity: true, hints: 'OS-level password for logging into the jump server host.' },
         ]
+    },
+    {
+        dropdowntype: 'EncryptedVerifyCertificate',
+        field: [
+            { fieldName: 'Host Name In Certificate', id: 'hostNameinCertificate', type: 'text', validity: true, hints: 'Specifies the host name of the server. The value of this property must match the subject property of the certificate.' },
+        ]
     }
 ]
 
@@ -94,7 +169,8 @@ const Setups = (props) => {
         { name: 'MySql', code: 'MySql' },
         { name: 'QuickBooks', code: 'QuickBooks' },
         { name: 'BigCommerce', code: 'BigCommerce' },
-        { name: 'MongoDB', code: 'MongoDB' }
+        { name: 'MongoDB', code: 'MongoDB' },
+        { name: 'MSSQL', code: 'MSSQL' }
     ];
     const toast = React.useRef(null);
     const [newData, setNewData] = useState(true);
@@ -142,6 +218,43 @@ const Setups = (props) => {
             useragent: '',
             clientsecret: '',
             refreshtoken: ''
+        },
+        MongoDB: {
+            databaseName: '',
+            user: '',
+            password: '',
+            authenticationSource: '',
+            mongoDBInstance: null,
+            host: '',
+            port: '',
+            tlsConnection: ''
+        },
+        MSSQL: {
+            host: '',
+            port: '',
+            username: '',
+            database: '',
+            password: '',
+            jdbcurlparams: '',
+            sslconnection: '',
+            replicationmethod: null,
+            sshtunnelmethodCertificate: null,
+            sshtunnelmethod: null,
+            SSHKeyAuthentication: {
+                sshtnneljumpserverhostkeyauth: '',
+                sshconnectionportkeyauth: '',
+                sshloginusernamekeyauth: '',
+                sshprivatekeykeyauth: ''
+            },
+            PasswordAuthentication: {
+                sshtnneljumpserverhostpassauth: '',
+                sshconnectionportpassauth: '',
+                sshloginusernamepassauth: '',
+                sshpasswordpassauth: ''
+            },
+            EncryptedVerifyCertificate: {
+                hostNameinCertificate: ''
+            }
         }
     });
 
@@ -187,52 +300,80 @@ const Setups = (props) => {
     const renderSubfieldsformysqlsshtunnelmethod = () => {
         let filtereditem;
         let newfields;
-        if (setupsourceConfiguration.MySql.sshtunnelmethod !== null) {
-            switch (setupsourceConfiguration.MySql.sshtunnelmethod.code) {
-                case "SSHKeyAuthentication":
-                    filtereditem = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MySql.sshtunnelmethod.code);
-                    newfields = filtereditem[0].field.map((item, index) => {
-                        return (
-                            <div key={index} className="p-col-12">
-                                <div className="p-field">
-                                    <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
-                                    {
-                                        item.type === 'text' &&
-                                        <>
-                                            <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration.MySql.sshtunnelmethod.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration.MySql.sshtunnelmethod.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
-                                            {item.validity === false &&
-                                                <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
-                                            }
-                                        </>
-                                    }
-                                </div>
+        if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod !== null) {
+            if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code === "SSHKeyAuthentication") {
+                filtereditem = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code);
+                newfields = filtereditem[0].field.map((item, index) => {
+                    return (
+                        <div key={index} className="p-col-12">
+                            <div className="p-field">
+                                <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
+                                {
+                                    item.type === 'text' &&
+                                    <>
+                                        <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                        {item.validity === false &&
+                                            <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                        }
+                                    </>
+                                }
                             </div>
-                        )
-                    })
-                    return newfields
-                case "PasswordAuthentication":
-                    filtereditem = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MySql.sshtunnelmethod.code);
-                    newfields = filtereditem[0].field.map((item, index) => {
-                        return (
-                            <div key={index} className="p-col-12">
-                                <div className="p-field">
-                                    <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
-                                    {
-                                        item.type === 'text' &&
-                                        <>
-                                            <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration.MySql.sshtunnelmethod.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration.MySql.sshtunnelmethod.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
-                                            {item.validity === false &&
-                                                <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
-                                            }
-                                        </>
-                                    }
-                                </div>
+                        </div>
+                    )
+                })
+                return newfields;
+            }
+            if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code === "PasswordAuthentication") {
+                filtereditem = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code);
+                newfields = filtereditem[0].field.map((item, index) => {
+                    return (
+                        <div key={index} className="p-col-12">
+                            <div className="p-field">
+                                <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
+                                {
+                                    item.type === 'text' &&
+                                    <>
+                                        <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration.MySql.sshtunnelmethod.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                        {item.validity === false &&
+                                            <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                        }
+                                    </>
+                                }
                             </div>
-                        )
-                    })
-                    return newfields
-                default:
-                    return null;
+                        </div>
+                    )
+                })
+                return newfields;
+            }
+            else {
+                return null;
+            }
+        }
+        else if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethodCertificate !== null) {
+            if (setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethodCertificate.code === "EncryptedVerifyCertificate") {
+                filtereditem = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MSSQL.sshtunnelmethodCertificate.code);
+                newfields = filtereditem[0].field.map((item, index) => {
+                    return (
+                        <div key={index} className="p-col-12">
+                            <div className="p-field">
+                                <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
+                                {
+                                    item.type === 'text' &&
+                                    <>
+                                        <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration.MSSQL.sshtunnelmethodCertificate.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration.MSSQL.sshtunnelmethodCertificate.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                        {item.validity === false &&
+                                            <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                        }
+                                    </>
+                                }
+                            </div>
+                        </div>
+                    )
+                })
+                return newfields
+            }
+            else {
+                return null;
             }
         }
         else {
@@ -337,6 +478,74 @@ const Setups = (props) => {
                                                 <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
                                             }
                                         </>
+                                    }
+                                </div>
+                            </div>
+                        )
+                    })
+                    return newfields;
+                case "MongoDB":
+                    filterditem = fields.filter((item) => item.sourcetype === setupInitials.SourceType.code);
+                    newfields = filterditem[0].field.map((item, index) => {
+                        return (
+                            <div key={index} className="p-col-12">
+                                <div className="p-field">
+                                    <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
+                                    {
+                                        item.type === 'text' &&
+                                        <>
+                                            <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigs(setupInitials.SourceType.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                            {item.validity === false &&
+                                                <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                            }
+                                        </>
+                                    }
+                                    {
+                                        item.type === 'dropdown' &&
+                                        <>
+                                            <Dropdown id={item.id} style={{ width: '100%' }} value={setupsourceConfiguration[setupInitials.SourceType.code][item.id]} options={item.dropdownlist} onChange={(e) => { item.validity = true; onChangeforConfigs(setupInitials.SourceType.code, item.id, e.value); }} optionLabel="name" placeholder={`Select ${item.fieldName}`} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid` : ``} />
+                                            {item.validity === false &&
+                                                <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                            }
+                                        </>
+                                    }
+                                    {
+                                        item.type === 'toggle' &&
+                                        <InputSwitch id={item.id} checked={setupsourceConfiguration[setupInitials.SourceType.code][item.id]} onChange={(e) => onChangeforConfigs(setupInitials.SourceType.code, item.id, e.value)} />
+                                    }
+                                </div>
+                            </div>
+                        )
+                    })
+                    return newfields;
+                case "MSSQL":
+                    filterditem = fields.filter((item) => item.sourcetype === setupInitials.SourceType.code);
+                    newfields = filterditem[0].field.map((item, index) => {
+                        return (
+                            <div key={index} className="p-col-12">
+                                <div className="p-field">
+                                    <label htmlFor={item.id} className="p-d-block"><span style={{ fontWeight: 'bold' }}>{item.fieldName}{item.hints !== "" ? " - " : " "}</span>{item.hints}</label>
+                                    {
+                                        item.type === 'text' &&
+                                        <>
+                                            <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigs(setupInitials.SourceType.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                            {item.validity === false &&
+                                                <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                            }
+                                        </>
+                                    }
+                                    {
+                                        item.type === 'dropdown' &&
+                                        <>
+                                            <Dropdown id={item.id} style={{ width: '100%' }} value={setupsourceConfiguration[setupInitials.SourceType.code][item.id]} options={item.dropdownlist} onChange={(e) => { item.validity = true; onChangeforConfigs(setupInitials.SourceType.code, item.id, e.value); }} optionLabel="name" placeholder={`Select ${item.fieldName}`} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid` : ``} />
+                                            {item.validity === false &&
+                                                <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
+                                            }
+                                        </>
+                                    }
+                                    {
+                                        item.type === 'toggle' &&
+                                        <InputSwitch id={item.id} checked={setupsourceConfiguration[setupInitials.SourceType.code][item.id]} onChange={(e) => onChangeforConfigs(setupInitials.SourceType.code, item.id, e.value)} />
                                     }
                                 </div>
                             </div>
@@ -467,6 +676,21 @@ const Setups = (props) => {
                 }
             }
 
+            if (setupInitials.SourceType.code === "MSSQL") {
+                if (setupsourceConfiguration.MSSQL.sshtunnelmethod !== null) {
+                    let subObj = obj[setupsourceConfiguration.MSSQL.sshtunnelmethod.code];
+                    let subdropdownFields = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MSSQL.sshtunnelmethod.code);
+                    subdropdownFields = subdropdownFields[0].field;
+
+                    for (let i = 0; i < subdropdownFields.length; i++) {
+                        if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
+                            subdropdownFields[i].validity = false;
+                            checked = false;
+                        }
+                    }
+                }
+            }
+
             obj = { ...obj };
             setSetupSourceConfiguration((prev) => ({ ...prev, [setupInitials.SourceType.code]: obj }));
 
@@ -529,6 +753,43 @@ const Setups = (props) => {
                 useragent: '',
                 clientsecret: '',
                 refreshtoken: ''
+            },
+            MongoDB: {
+                databaseName: '',
+                user: '',
+                password: '',
+                authenticationSource: '',
+                mongoDBInstance: null,
+                host: '',
+                port: '',
+                tlsConnection: ''
+            },
+            MSSQL: {
+                host: '',
+                port: '',
+                username: '',
+                database: '',
+                password: '',
+                jdbcurlparams: '',
+                sslconnection: '',
+                replicationmethod: null,
+                sshtunnelmethodCertificate: null,
+                sshtunnelmethod: null,
+                SSHKeyAuthentication: {
+                    sshtnneljumpserverhostkeyauth: '',
+                    sshconnectionportkeyauth: '',
+                    sshloginusernamekeyauth: '',
+                    sshprivatekeykeyauth: ''
+                },
+                PasswordAuthentication: {
+                    sshtnneljumpserverhostpassauth: '',
+                    sshconnectionportpassauth: '',
+                    sshloginusernamepassauth: '',
+                    sshpasswordpassauth: ''
+                },
+                EncryptedVerifyCertificate: {
+                    hostNameinCertificate: ''
+                }
             }
         })
 
@@ -574,7 +835,7 @@ const Setups = (props) => {
                                 <div className="p-grid">
                                     <div className="p-col-12 p-md-12 p-lg-12">
                                         <div className="p-field">
-                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help you identify this source in Airbyte.</label>
+                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help you identify this source.</label>
                                             <InputText value={setupInitials.SetupName} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SetupName: e.target.value, SetupNameValidity: true }))} id="name" style={{ width: '100%' }} aria-describedby="name-help" className={setupInitials.SetupNameValidity === false ? `p-invalid p-d-block` : `p-d-block`} />
                                             {setupInitials.SetupNameValidity === false &&
                                                 <small id="name-help" className="p-error p-d-block">Name* is not available.</small>
@@ -591,7 +852,11 @@ const Setups = (props) => {
                                         </div>
                                     </div>
                                     {renderFields()}
-                                    {setupInitials.SourceType !== null && setupInitials.SourceType.code === "MySql" && renderSubfieldsformysqlsshtunnelmethod()}
+                                    {
+                                        setupInitials.SourceType !== null &&
+                                        (setupInitials.SourceType.code === "MySql" || setupInitials.SourceType.code === "MSSQL") === true &&
+                                        renderSubfieldsformysqlsshtunnelmethod()
+                                    }
                                 </div>
                                 <div className="p-grid">
                                     <div className="p-col-3 p-md-3 p-lg-3">
