@@ -160,7 +160,8 @@ const App = () => {
         setSetupVisible(false);
         setsku(val);
         let payload = {
-            sku: val
+            sku: val,
+            ShopURL: localStorage.getItem("shop")
         }
         let GetData = await axios.post(`${constant.url}GetData`, payload)
         setData(GetData.data.Message.rows)
@@ -185,7 +186,7 @@ const App = () => {
     return (
         <div style={{ overflowX: 'hidden' }}>
             <div className='p-grid p-justify-center' style={{ height: 130, position: 'relative', bottom: 38 }}>
-            {/* <img src="assets/logo/app_logo.jpeg" alt="app_logo" style={{}} width="400px" height="160px" /> */}
+                {/* <img src="assets/logo/app_logo.jpeg" alt="app_logo" style={{}} width="400px" height="160px" /> */}
                 <img src="assets/logo/ai_web_logo.png" alt="ai_logo" width="580px" height="220px" />
                 {/* <h1 style={{ textAlign: 'center', fontFamily: 'sans-serif', color: '#3f51b5' }}>The AI Systems</h1></div> */}
             </div>
@@ -254,55 +255,55 @@ const App = () => {
                 />
                 : showMsg === true ?
                     <div className='p-grid p-justify-center' >
-                        <h2 style={{marginTop:'10%'}}>We are working on your Data, Please be patient...</h2>
+                        <h2 style={{ marginTop: '10%' }}>We are working on your Data, Please be patient...</h2>
                     </div>
-                : setupVisible === true ?
-                    <Setups />
-                    : showDashboard === true &&
-                    <div >
-                        <ComposedChart
-                            width={1580}
-                            height={450}
-                            data={data}
-                            margin={{
-                                top: 50,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
+                    : setupVisible === true ?
+                        <Setups />
+                        : showDashboard === true &&
+                        <div >
+                            <ComposedChart
+                                width={1580}
+                                height={450}
+                                data={data}
+                                margin={{
+                                    top: 50,
+                                    right: 30,
+                                    left: 20,
+                                    bottom: 5,
+                                }}
 
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="WeekOfYear" />
-                            <YAxis yAxisId={"left"} type="number" domain={[0, 600]} />
-                            <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar yAxisId={"left"} dataKey="Opening_Stock" fill="#fc0324" />
-                            <Line yAxisId={"right"} dataKey="SS" fill="#03fc17" />
-                        </ComposedChart>
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="WeekOfYear" />
+                                <YAxis yAxisId={"left"} type="number" domain={[0, 600]} />
+                                <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
+                                <Tooltip />
+                                <Legend />
+                                <Bar yAxisId={"left"} dataKey="Opening_Stock" fill="#fc0324" />
+                                <Line yAxisId={"right"} dataKey="SS" fill="#03fc17" />
+                            </ComposedChart>
 
-                        <ComposedChart
-                            width={1580}
-                            height={450}
-                            data={data}
-                            margin={{
-                                top: 50,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="WeekOfYear" />
-                            <YAxis yAxisId={"left"} type="number" domain={[0, 100]} />
-                            <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar yAxisId={"left"} dataKey="Sales" fill="#387318" />
-                            <Line yAxisId={"right"} type="monotone" dataKey="Purchases" fill="#704a1a" />
-                        </ComposedChart>
-                    </div>
+                            <ComposedChart
+                                width={1580}
+                                height={450}
+                                data={data}
+                                margin={{
+                                    top: 50,
+                                    right: 30,
+                                    left: 20,
+                                    bottom: 5,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="WeekOfYear" />
+                                <YAxis yAxisId={"left"} type="number" domain={[0, 100]} />
+                                <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
+                                <Tooltip />
+                                <Legend />
+                                <Bar yAxisId={"left"} dataKey="Sales" fill="#387318" />
+                                <Line yAxisId={"right"} type="monotone" dataKey="Purchases" fill="#704a1a" />
+                            </ComposedChart>
+                        </div>
             }
 
             <Drawer elevation={0}
