@@ -11,7 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import queryString from 'query-string';
 import Setups from './Setups/Setups';
 import PopupLookup from './PopUpLookUp';
-import tableComponent from './tableComponent';
+// import tableComponent from './tableComponent';
 // import { Button } from 'primereact/button';
 
 
