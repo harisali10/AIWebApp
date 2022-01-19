@@ -588,6 +588,7 @@ const Setups = (props) => {
     }
 
     const createStockSetup = () => {
+        console.log({ haris: setupInitials })
         if (setupInitials.SourceType !== null) {
             let Configuration = setupsourceConfiguration[setupInitials.SourceType.code];
             // if (setupInitials.SourceType.code === "MySql") {
@@ -610,7 +611,7 @@ const Setups = (props) => {
                     SetupName: setupInitials.SetupName,
                     SourceType: setupInitials.SourceType.code,
                     SourceConfiguration: Configuration,
-                    ClientID: 1,
+                    ClientID: 21,
                     ShopURL: localStorage.getItem("shop"),
                     Type: 'CreateSetupSource'
                 }
@@ -628,7 +629,7 @@ const Setups = (props) => {
                             }
                         })
                         .catch(function (error) {
-                            toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
+                            // toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
                         });
                 }
                 else {
@@ -692,14 +693,20 @@ const Setups = (props) => {
                 if (setupsourceConfiguration.MSSQL.sshtunnelmethod !== null) {
                     let subObj = obj[setupsourceConfiguration.MSSQL.sshtunnelmethod.code];
                     let subdropdownFields = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MSSQL.sshtunnelmethod.code);
-                    subdropdownFields = subdropdownFields[0].field;
-
-                    for (let i = 0; i < subdropdownFields.length; i++) {
-                        if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
-                            subdropdownFields[i].validity = false;
-                            checked = false;
+                    try {
+                        subdropdownFields = subdropdownFields[0].field;
+                        for (let i = 0; i < subdropdownFields.length; i++) {
+                            if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
+                                subdropdownFields[i].validity = false;
+                                checked = false;
+                            }
                         }
                     }
+                    catch (e) {
+
+                    }
+
+
                 }
             }
 
@@ -850,7 +857,7 @@ const Setups = (props) => {
                                 <div className="p-grid">
                                     <div className="p-col-12 p-md-12 p-lg-12">
                                         <div className="p-field">
-                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help you identify this source.</label>
+                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help us identify this source.</label>
                                             <InputText value={setupInitials.SetupName} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SetupName: e.target.value, SetupNameValidity: true }))} id="name" style={{ width: '100%' }} aria-describedby="name-help" className={setupInitials.SetupNameValidity === false ? `p-invalid p-d-block` : `p-d-block`} />
                                             {setupInitials.SetupNameValidity === false &&
                                                 <small id="name-help" className="p-error p-d-block">Name* is not available.</small>

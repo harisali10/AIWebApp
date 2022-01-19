@@ -91,9 +91,9 @@ const App = () => {
     useEffect(() => {
         getOptionList();
         let params = queryString.parse(window.location.search)
-        localStorage.setItem("shop", params.shop);
-        // localStorage.setItem("shop", "finosys.myshopify.com");
-        tableApiCalls();
+        // localStorage.setItem("shop", params.shop);
+        localStorage.setItem("shop", "finosys.myshopify.com");
+        // tableApiCalls();
     }, [])
 
     async function getOptionList() {
@@ -551,8 +551,8 @@ const App = () => {
                 : null}
             {showDashboard === true ?
                 <div className='p-grid'>
-                    <div className='p-col-9'>
-                        <ResponsiveContainer width="99%" aspect={3}>
+                    <div className='p-col-12 p-md-9 p-lg-8'>
+                        <ResponsiveContainer width="99%" height ="50%" aspect={3}>
                             <ComposedChart
                                 width={1480}
                                 height={450}
@@ -576,7 +576,7 @@ const App = () => {
                             </ComposedChart>
 
                         </ResponsiveContainer >
-                        <ResponsiveContainer width="99%" aspect={3}>
+                        <ResponsiveContainer width="99%" height ="0%" aspect={3}>
 
                             <ComposedChart
                                 width={1480}
@@ -601,7 +601,7 @@ const App = () => {
                         </ResponsiveContainer>
 
                     </div>
-                    <div className='p-col-3' style={{ paddingRight: 25 }}>
+                    <div className='p-col-12 p-md-3 p-lg-4' style={{ paddingRight: 25 }}>
                         {/* <h5>Haris Ali</h5> */}
                         <div className="card card-w-title " style={{ boxShadow: "-1px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)" }} >
                             <div className='p-grid'>
