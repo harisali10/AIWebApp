@@ -10,7 +10,7 @@ import { Divider, Button } from '@material-ui/core';
 import { Circle, Spinner } from 'react-spinners-css';
 import constants from '../utilities/constants';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Select, FormControl, InputLabel, MenuItem, FormHelperText, TextField, Drawer, Snackbar, Typography, Backdrop,CircularProgress } from '@material-ui/core';
+import { Grid, Select, FormControl, InputLabel, MenuItem, FormHelperText, TextField, Drawer, Snackbar, Typography, Backdrop, CircularProgress } from '@material-ui/core';
 
 const constant = constants.getConstant();
 
@@ -305,7 +305,7 @@ const Setups = (props) => {
             })
             .catch(function (error) {
                 setLoading(false);
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message === undefined || null ? "StockSources Not Found" : null, life: 3000 });
             });
     }, []);
 
