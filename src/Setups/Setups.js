@@ -9,8 +9,19 @@ import { Toast } from 'primereact/toast';
 import { Divider, Button } from '@material-ui/core';
 import { Circle, Spinner } from 'react-spinners-css';
 import constants from '../utilities/constants';
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Select, FormControl, InputLabel, MenuItem, FormHelperText, TextField, Drawer, Snackbar, Typography, Backdrop,CircularProgress } from '@material-ui/core';
 
 const constant = constants.getConstant();
+
+const useStyles = makeStyles((theme) => ({
+
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
+}));
+
 
 const fields = [
     {
@@ -164,7 +175,7 @@ const subFields = [
 ]
 
 const Setups = (props) => {
-
+    const classes = useStyles();
     const sourceTypes = [
         { name: 'MySql', code: 'MySql' },
         { name: 'QuickBooks', code: 'QuickBooks' },
@@ -825,9 +836,12 @@ const Setups = (props) => {
             <Toast ref={toast} />
             {
                 loading === true ?
-                    <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
-                        <Spinner />
-                    </div>
+                    <Backdrop className={classes.backdrop} open={loading} onClick={() => null}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                    // <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
+                    //     <Spinner />
+                    // </div>
                     :
                     <div className="p-grid">
                         <div className="p-col-10 p-md-10 p-lg-8 p-offset-1 p-md-offset-1 p-lg-offset-2">

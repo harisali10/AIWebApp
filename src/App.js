@@ -482,10 +482,7 @@ const App = () => {
 
             </div>
             <Divider light />
-            {/* <tableComponent
-                tableName={logsRecords.TableName}
-                rows={logsRecords.rows}
-                columns={logsRecords.rows}></tableComponent> */}
+
 
             {MTable === true ?
                 <MaterialTable
@@ -555,48 +552,54 @@ const App = () => {
             {showDashboard === true ?
                 <div className='p-grid'>
                     <div className='p-col-9'>
-                        <ComposedChart
-                            width={1480}
-                            height={450}
-                            data={data}
-                            margin={{
-                                top: 0,
-                                right: 0,
-                                left: 0,
-                                bottom: 0,
-                            }}
+                        <ResponsiveContainer width="99%" aspect={3}>
+                            <ComposedChart
+                                width={1480}
+                                height={450}
+                                data={data}
+                                margin={{
+                                    top: 0,
+                                    right: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                }}
 
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="WeekOfYear" />
-                            <YAxis yAxisId={"left"} type="number" domain={[0, 600]} />
-                            <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar yAxisId={"left"} dataKey="Opening_Stock" fill="#fc0324" />
-                            <Line yAxisId={"right"} dataKey="SS" fill="#03fc17" />
-                        </ComposedChart>
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="WeekOfYear" />
+                                <YAxis yAxisId={"left"} type="number" domain={[0, 600]} />
+                                <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
+                                <Tooltip />
+                                <Legend />
+                                <Bar yAxisId={"left"} dataKey="Opening_Stock" fill="#fc0324" />
+                                <Line yAxisId={"right"} dataKey="SS" fill="#03fc17" />
+                            </ComposedChart>
 
-                        <ComposedChart
-                            width={1480}
-                            height={450}
-                            data={data}
-                            margin={{
-                                top: 0,
-                                right: 0,
-                                left: 0,
-                                bottom: 0,
-                            }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="WeekOfYear" />
-                            <YAxis yAxisId={"left"} type="number" domain={[0, 100]} />
-                            <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar yAxisId={"left"} dataKey="Sales" fill="#387318" />
-                            <Line yAxisId={"right"} type="monotone" dataKey="Purchases" fill="#704a1a" />
-                        </ComposedChart>
+                        </ResponsiveContainer >
+                        <ResponsiveContainer width="99%" aspect={3}>
+
+                            <ComposedChart
+                                width={1480}
+                                height={450}
+                                data={data}
+                                margin={{
+                                    top: 0,
+                                    right: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="WeekOfYear" />
+                                <YAxis yAxisId={"left"} type="number" domain={[0, 100]} />
+                                <YAxis yAxisId={"right"} orientation={"right"} type="number" domain={[0, 600]} />
+                                <Tooltip />
+                                <Legend />
+                                <Bar yAxisId={"left"} dataKey="Sales" fill="#387318" />
+                                <Line yAxisId={"right"} type="monotone" dataKey="Purchases" fill="#704a1a" />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+
                     </div>
                     <div className='p-col-3' style={{ paddingRight: 25 }}>
                         {/* <h5>Haris Ali</h5> */}
@@ -695,9 +698,9 @@ const App = () => {
 
 
             <div style={{ marginTop: '120px' }}>
-                <div style={{ position: 'fixed', left: 0, bottom: 0, width: '100%', backgroundColor: '#3f51b5', color: 'white', textAlign: 'center', height: 60}}>
-                    <a  style={{ color: "white", fontSize: 25,  }} href="https://drive.google.com/file/d/1hfs1aTjM8rowsKfhNl0f_pci76mTs6pP/view?usp=sharing"> Privacy</a>
-                    <a style={{ color: "white", fontSize: 25, paddingLeft:35  }} href="mailto:arehman@theaisystems.com">Contact Us</a>
+                <div style={{ position: 'fixed', left: 0, bottom: 0, width: '100%', backgroundColor: '#3f51b5', color: 'white', textAlign: 'center', height: 60 }}>
+                    <a style={{ color: "white", fontSize: 25, }} href="https://drive.google.com/file/d/1hfs1aTjM8rowsKfhNl0f_pci76mTs6pP/view?usp=sharing"> Privacy</a>
+                    <a style={{ color: "white", fontSize: 25, paddingLeft: 35 }} href="mailto:arehman@theaisystems.com">Contact Us</a>
                 </div>
             </div>
 
@@ -740,14 +743,6 @@ const App = () => {
 
                 </div>
             </Drawer> */}
-            {/* <tableComponent
-                tableName={isResData === true ? resultRecords.TableName : logsRecords.TableName}
-                rows={isResData === true ? resultRecords.rows : logsRecords.rows}
-                columns={isResData === true ? resultRecords.rows : logsRecords.rows}></tableComponent>
-                 */}
-            {/* <div>
-                <
-            </div> */}
 
             <PopupLookup large={true} LookUpHeading={"SKU"}
                 LookUpClose={() => setPoupUpLookupOpen(false)} setLookUpData={(e, rowData) => setLookUpData(e, rowData)}
