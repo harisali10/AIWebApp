@@ -9,8 +9,19 @@ import { Toast } from 'primereact/toast';
 import { Divider, Button } from '@material-ui/core';
 import { Circle, Spinner } from 'react-spinners-css';
 import constants from '../utilities/constants';
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Select, FormControl, InputLabel, MenuItem, FormHelperText, TextField, Drawer, Snackbar, Typography, Backdrop, CircularProgress } from '@material-ui/core';
 
 const constant = constants.getConstant();
+
+const useStyles = makeStyles((theme) => ({
+
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
+}));
+
 
 const fields = [
     {
@@ -164,7 +175,7 @@ const subFields = [
 ]
 
 const Setups = (props) => {
-
+    const classes = useStyles();
     const sourceTypes = [
         { name: 'MySql', code: 'MySql' },
         { name: 'QuickBooks', code: 'QuickBooks' },
@@ -294,7 +305,7 @@ const Setups = (props) => {
             })
             .catch(function (error) {
                 setLoading(false);
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message === undefined || null ? "StockSources Not Found" : null, life: 3000 });
             });
     }, []);
 
@@ -577,6 +588,7 @@ const Setups = (props) => {
     }
 
     const createStockSetup = () => {
+        console.log({ haris: setupInitials })
         if (setupInitials.SourceType !== null) {
             let Configuration = setupsourceConfiguration[setupInitials.SourceType.code];
             // if (setupInitials.SourceType.code === "MySql") {
@@ -599,7 +611,7 @@ const Setups = (props) => {
                     SetupName: setupInitials.SetupName,
                     SourceType: setupInitials.SourceType.code,
                     SourceConfiguration: Configuration,
-                    ClientID: 1,
+                    ClientID: 21,
                     ShopURL: localStorage.getItem("shop"),
                     Type: 'CreateSetupSource'
                 }
@@ -617,7 +629,7 @@ const Setups = (props) => {
                             }
                         })
                         .catch(function (error) {
-                            toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
+                            // toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
                         });
                 }
                 else {
@@ -826,9 +838,12 @@ const Setups = (props) => {
             <Toast ref={toast} />
             {
                 loading === true ?
-                    <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
-                        <Spinner />
-                    </div>
+                    <Backdrop className={classes.backdrop} open={loading} onClick={() => null}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                    // <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
+                    //     <Spinner />
+                    // </div>
                     :
                     <div className="p-grid">
                         <div className="p-col-10 p-md-10 p-lg-8 p-offset-1 p-md-offset-1 p-lg-offset-2">
@@ -837,7 +852,7 @@ const Setups = (props) => {
                                 <div className="p-grid">
                                     <div className="p-col-12 p-md-12 p-lg-12">
                                         <div className="p-field">
-                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help you identify this source.</label>
+                                            <label htmlFor="name" className="p-d-block"><span style={{ fontWeight: 'bold' }}>Name* - </span>Pick a name to help us identify this source.</label>
                                             <InputText value={setupInitials.SetupName} onChange={(e) => setSetupInitials((prev) => ({ ...prev, SetupName: e.target.value, SetupNameValidity: true }))} id="name" style={{ width: '100%' }} aria-describedby="name-help" className={setupInitials.SetupNameValidity === false ? `p-invalid p-d-block` : `p-d-block`} />
                                             {setupInitials.SetupNameValidity === false &&
                                                 <small id="name-help" className="p-error p-d-block">Name* is not available.</small>
