@@ -96,7 +96,7 @@ const fields = [
             { fieldName: 'Username*', id: 'username', type: 'text', validity: true, hints: 'The username which is used to access the database.' },
             { fieldName: 'Password*', id: 'password', type: 'text', validity: true, hints: 'The password associated with the username.' },
             { fieldName: 'JDBC URL Params', id: 'jdbcurlparams', type: 'text', validity: true, hints: "Additional properties to pass to the jdbc url string when connecting to the database formatted as 'key=value' pairs separated by the symbol '&'. (example: key1=value1&key2=value2&key3=value3)." },
-            { fieldName: 'SSL Connection', id: 'sslConnection', type: 'toggle', validity: true, hints: 'Encrypt data using SSL.' },
+            { fieldName: 'SSL Connection', id: 'sslconnection', type: 'toggle', validity: true, hints: 'Encrypt data using SSL.' },
             {
                 fieldName: 'Replication Method*',
                 id: 'replicationmethod',
@@ -189,7 +189,7 @@ const Setups = (props) => {
             database: '',
             password: '',
             jdbcurlparams: '',
-            sslconnection: '',
+            sslconnection: false,
             replicationmethod: null,
             sshtunnelmethod: null,
             SSHKeyAuthentication: {
@@ -227,7 +227,7 @@ const Setups = (props) => {
             mongoDBInstance: null,
             host: '',
             port: '',
-            tlsConnection: ''
+            tlsConnection: false
         },
         MSSQL: {
             host: '',
@@ -236,7 +236,7 @@ const Setups = (props) => {
             database: '',
             password: '',
             jdbcurlparams: '',
-            sslconnection: '',
+            sslconnection: false,
             replicationmethod: null,
             sshtunnelmethodCertificate: null,
             sshtunnelmethod: null,
@@ -654,7 +654,7 @@ const Setups = (props) => {
             let obj = configObj;
             let listField = fields.filter((item) => item.sourcetype === setupInitials.SourceType.code);
             listField = listField[0].field;
-
+            
             for (let i = 0; i < listField.length; i++) {
                 if (obj[listField[i].id] === "" || obj[listField[i].id] === undefined || obj[listField[i].id] === null) {
                     listField[i].validity = false;
@@ -666,12 +666,13 @@ const Setups = (props) => {
                 if (setupsourceConfiguration.MySql.sshtunnelmethod !== null) {
                     let subObj = obj[setupsourceConfiguration.MySql.sshtunnelmethod.code];
                     let subdropdownFields = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MySql.sshtunnelmethod.code);
-                    subdropdownFields = subdropdownFields[0].field;
-
-                    for (let i = 0; i < subdropdownFields.length; i++) {
-                        if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
-                            subdropdownFields[i].validity = false;
-                            checked = false;
+                    if(subdropdownFields.length>0){
+                        subdropdownFields = subdropdownFields[0].field;
+                        for (let i = 0; i < subdropdownFields.length; i++) {
+                            if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
+                                subdropdownFields[i].validity = false;
+                                checked = false;
+                            }
                         }
                     }
                 }
@@ -681,12 +682,13 @@ const Setups = (props) => {
                 if (setupsourceConfiguration.MSSQL.sshtunnelmethod !== null) {
                     let subObj = obj[setupsourceConfiguration.MSSQL.sshtunnelmethod.code];
                     let subdropdownFields = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MSSQL.sshtunnelmethod.code);
-                    subdropdownFields = subdropdownFields[0].field;
-
-                    for (let i = 0; i < subdropdownFields.length; i++) {
-                        if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
-                            subdropdownFields[i].validity = false;
-                            checked = false;
+                    if (subdropdownFields.length > 0) {
+                        subdropdownFields = subdropdownFields[0].field;
+                        for (let i = 0; i < subdropdownFields.length; i++) {
+                            if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
+                                subdropdownFields[i].validity = false;
+                                checked = false;
+                            }
                         }
                     }
                 }
@@ -694,7 +696,6 @@ const Setups = (props) => {
 
             obj = { ...obj };
             setSetupSourceConfiguration((prev) => ({ ...prev, [setupInitials.SourceType.code]: obj }));
-
             return checked;
         }
         else {
