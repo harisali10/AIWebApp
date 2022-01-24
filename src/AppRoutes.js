@@ -1,18 +1,27 @@
-import About from './haris';
+
 import App from './App';
 import Setups from './Setups/Setups';
-import { Routes, Route, Link, withRouter, Switch } from "react-router-dom";
+import Home from './views/home';
+import Results from './views/Results';
+import Logs from "./views/Logs";
+import Dashboard from "./views/Dashboard";
+import TopBar from './components/TopBar'
+import { Route, Link, withRouter, Switch } from "react-router-dom";
 
 const AppRoutes = () => {
-    return (<>
-        <Switch>
-            <Route path="/cd" component={App} />
-            <Route path="/about" component={About} />
-            <Route path="/setup" component={Setups} />
-            {/* Setups */}
-            {/* <Route path='/about' component={About}> */}
-            {/*<Route path='/about' component={About}> */}
-        </Switch>  </>)
+    return (
+        <div>
+            <Switch>
+                {/* <App/> */}
+                <Route path="/" exact={true} component={Results} />
+                <Route path="/dashboard" exact={true} component={Dashboard} />
+                <Route path="/logs" exact={true} component={Logs} />
+                <Route path="/haris" exact={true} component={Home} />
+                <Route path="/setup" exact={true} component={Setups} />
+            </Switch>
+
+        </div>
+    )
 
 }
 export default withRouter(AppRoutes);
