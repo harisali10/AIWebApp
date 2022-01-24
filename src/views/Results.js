@@ -27,7 +27,21 @@ const Results = () => {
     useEffect(() => {
         // let params = queryString.parse(window.location.search)
         localStorage.setItem("shop", "finosys.myshopify.com");
-        fetchResults();
+        // if (localStorage.getItem("rows")) {
+        //     setTableData((prevState) =>
+        //     ({
+        //         ...prevState,
+        //         rows: localStorage.getItem("rows"),
+        //         columns: localStorage.getItem("columns"),
+        //         TableName: "Stock Out Dashboard"
+        //     }))
+
+
+        // }
+        // else {
+            fetchResults();
+
+        // }
         fetchSku();
     }, [])
 
@@ -52,6 +66,9 @@ const Results = () => {
                     columns: res.data.Message.columns,
                     TableName: "Stock Out Dashboard"
                 }))
+                localStorage.setItem("rows", res.data.Message.rows)
+                localStorage.setItem("columns", res.data.Message.columns)
+
                 // setShowMsg(false);
             }
             // else {
