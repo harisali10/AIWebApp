@@ -4,13 +4,23 @@ import axios from 'axios';
 import constants from '../../src/utilities/constants';
 import { setSkuArray } from "../store/action/action";
 import { useDispatch, useSelector } from 'react-redux';
-
+import BackDropLoader from "../components/BackDrop";
+import { Toast } from 'primereact/toast';
 
 const constant = constants.getConstant();
 
+
+
+
 const Results = () => {
 
+
     const [tableData, setTableData] = useState({ rows: [], columns: [], TableName: '' })
+
+    const [showLoader, setShowLoader] = useState(false)
+    const toast = React.useRef(null);
+
+
 
     const dispatch = useDispatch();
 
@@ -23,6 +33,7 @@ const Results = () => {
 
 
     async function fetchResults() {
+        setShowLoader(true)
         try {
             const res = await axios.post(`${constant.url}GetPredictionResults`, {
                 Header: {
@@ -50,16 +61,14 @@ const Results = () => {
 
         }
         catch (e) {
-            // toast.current.show({
-            //     severity: 'info',
-            //     summary: 'No Source Setup found!',
-            //     detail: "Please Create Source Setup to show records.",
-            //     life: 3000
-            // });
-            // setOpen(false);
-            // setMTable(false);
-            // setShowMsg(true);
+            toast.current.show({
+                severity: 'info',
+                summary: 'No Source Setup found!',
+                detail: "Please Create Source Setup to show records.",
+                life: 3000
+            });
         }
+        setShowLoader(false)
 
     }
 
@@ -71,22 +80,24 @@ const Results = () => {
                     ShopURL: localStorage.getItem("shop")
                 }
             })
-            // setOptions(options.data.Message)
             dispatch(setSkuArray(options.data.Message))
         } catch (e) {
-            // toast.current.show({
-            //     severity: 'error',
-            //     summary: 'Failed to get SKUs',
-            //     detail: "SKU Api Response Failed",
-            //     life: 3000
-            // });
+            toast.current.show({
+                severity: 'error',
+                summary: 'Failed to get SKUs',
+                detail: "SKU Api Response Failed",
+                life: 3000
+            });
 
         }
 
     }
 
     return (<>
+        <BackDropLoader backDrop={showLoader}>
 
+        </BackDropLoader>
+        <Toast ref={toast} />
         <MaterialTable
             style={{
                 padding: '10px',

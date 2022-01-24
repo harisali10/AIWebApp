@@ -8,6 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import Drawer from '@material-ui/core/Drawer';
 import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
+import LockIcon from '@material-ui/icons/Lock';
 
 
 let menuItems = [{
@@ -31,6 +32,7 @@ let menuItems = [{
     path: "/setup"
 
 }
+
 ]
 
 
@@ -38,8 +40,6 @@ const SideMenu = (props) => {
 
     const [openMenu, setOpenMenu] = useState(false);
     let history = useHistory();
-
-    console.log({ props })
 
     const openMenuBar = () => {
         setOpenMenu(true)
@@ -49,11 +49,24 @@ const SideMenu = (props) => {
     function handleMenuClick(e) {
         if (e.target.outerText === "DASHBOARD") {
             props.setSkuIconTrue(true)
-        } else {
+        }
+
+        else {
             props.setSkuIconTrue(false)
 
         }
-        console.log(e.target.outerText)
+
+        props.setSideMenu(false)
+    }
+
+
+    const showPrivacyScreen = () => {
+        let url = "https://drive.google.com/file/d/1hfs1aTjM8rowsKfhNl0f_pci76mTs6pP/view"
+        window.open(
+            url,
+            "_blank",
+        );
+
     }
 
     return (<>
@@ -83,11 +96,18 @@ const SideMenu = (props) => {
                                             <ListItemIcon> {item.menuItemIcon} </ListItemIcon>
                                             <ListItemText primary={item.menuItemName} />
                                         </ListItem>
+
+
                                     </List>
                                 </div>
                             </>)
                         })
                     }
+                    <ListItem button onClick={(e) => showPrivacyScreen()}>
+                        <ListItemIcon> <LockIcon /></ListItemIcon>
+                        <ListItemText primary={"PRIVACY"} />
+                    </ListItem>
+
                 </div>
             </div>
         </Drawer>

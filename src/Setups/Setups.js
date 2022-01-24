@@ -9,6 +9,7 @@ import { Toast } from 'primereact/toast';
 import { Divider, Button } from '@material-ui/core';
 import { Circle, Spinner } from 'react-spinners-css';
 import constants from '../utilities/constants';
+import BackDropLoader from "../components/BackDrop";
 
 const constant = constants.getConstant();
 
@@ -822,13 +823,12 @@ const Setups = (props) => {
             <div>
                 {/* <h3 style={{ alignContent: 'center' }}>Setup</h3> */}
             </div>
+
+            <BackDropLoader backDrop={loading}>
+
+            </BackDropLoader>
             <Toast ref={toast} />
             {
-                loading === true ?
-                    <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
-                        <Spinner />
-                    </div>
-                    :
                     <div className="p-grid">
                         <div className="p-col-10 p-md-10 p-lg-8 p-offset-1 p-md-offset-1 p-lg-offset-2">
                             <Card title="Set up the Source">

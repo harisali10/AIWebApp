@@ -18,6 +18,17 @@ export const skuReducer = (state = initialState, action) => {
                 ...state,
                 skuArray: action.payload || state.skuArray,
             };
+        case Types.RESET_SKU:
+            return {
+                ...state,
+                skuValue: false,
+            };
+        case Types.RESET_SKU_ARRAY:
+            return {
+                ...state,
+                skuArray: [],
+            };
+
 
         default:
             return state;

@@ -6,9 +6,11 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
+import ContactsIcon from '@material-ui/icons/Contacts';
 import IconButton from '@material-ui/core/IconButton';
 import SideMenu from "./SideMenu";
 import TouchAppIcon from '@material-ui/icons/TouchApp';
+import Tooltip from '@material-ui/core/Tooltip';
 import { setSku } from '../store/action/action';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -40,12 +42,16 @@ const TopBar = () => {
 
     const openSkuTable = () => {
         dispatch(setSku(true))
-        // setSkuValue(true);
+
+    }
+
+    const showContactUs = () => {
+        window.location.href = "mailto:arehman@theaisystems.com"
     }
 
     return (<>
         <div className={classes.root}>
-            <AppBar position="fixed">
+            <AppBar position="fixed"  style={{backgroundColor:"#61ab8e"}}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} onClick={() => setSideMenu(true)} color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -53,12 +59,18 @@ const TopBar = () => {
                     <Typography variant="h6" className={classes.title}>
                         AI SYSTEMS
                     </Typography>
+                    <Button color="inherit" onClick={() => showContactUs()}>
+                        <Tooltip title="Contact Us">
+                            <ContactsIcon />
+                        </Tooltip>
+
+                    </Button>
                     {showSkuIcon && <Button color="inherit" onClick={openSkuTable}>
-                        <TouchAppIcon />
+                        <Tooltip title="Select SKU">
+                            <TouchAppIcon />
+                        </Tooltip>
                         SKU
                     </Button>}
-                    {/* <Button color="inherit">Login</Button> */}
-
                 </Toolbar>
             </AppBar>
         </div>
