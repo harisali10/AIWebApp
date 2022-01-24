@@ -351,7 +351,7 @@ const Setups = (props) => {
                                 {
                                     item.type === 'text' &&
                                     <>
-                                        <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration.MySql.sshtunnelmethod.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
+                                        <InputText value={setupsourceConfiguration[setupInitials.SourceType.code][setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code][item.id]} onChange={(e) => { item.validity = true; onChangeforConfigsDropdown(setupInitials.SourceType.code, setupsourceConfiguration[setupInitials.SourceType.code].sshtunnelmethod.code, item.id, e.target.value); }} id={item.id} style={{ width: '100%' }} aria-describedby={`${item.id}-help`} className={item.validity === false ? `p-invalid p-d-block` : `p-d-block`} />
                                         {item.validity === false &&
                                             <small id={`${item.id}-help`} className="p-error p-d-block">{item.fieldName} is not available.</small>
                                         }

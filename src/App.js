@@ -240,6 +240,7 @@ const App = () => {
             setMTable(false);
             setShowMsg(true);
         }
+        setOpen(false)
         // try {
         //     const logsRes = await axios.post(`${constant.url}GetPredictionResults`, {
         //         Header: {
