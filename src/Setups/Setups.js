@@ -26,18 +26,19 @@ const useStyles = makeStyles((theme) => ({
 const fields = [
     {
         sourcetype: 'MySql', field: [
-            { fieldName: 'Host*', id: 'host', type: 'text', validity: true, hints: 'The hostname of the database.' },
-            { fieldName: 'Port*', id: 'port', type: 'text', validity: true, hints: 'The port to connect to.(e.g. 3306).' },
-            { fieldName: 'Username*', id: 'username', type: 'text', validity: true, hints: 'The username which is used to access the database.' },
-            { fieldName: 'Database*', id: 'database', type: 'text', validity: true, hints: 'The database name.' },
-            { fieldName: 'Password', id: 'password', type: 'text', validity: true, hints: 'The password associated with the username.' },
-            { fieldName: 'JDBC URL Params', id: 'jdbcurlparams', validity: true, type: 'text', hints: 'Additional properties to pass to the jdbc url string when connecting to the database formatted as keyvalue pairs separated by the symbol &. (example: key1=value1&key2=value2&key3=value3).' },
-            { fieldName: 'SSL Connection', id: 'sslconnection', validity: true, type: 'toggle', hints: 'Encrypt data using SSL.' },
+            { fieldName: 'Host*', id: 'host', type: 'text', mandatory: true, validity: true, hints: 'The hostname of the database.' },
+            { fieldName: 'Port*', id: 'port', type: 'text', mandatory: true, validity: true, hints: 'The port to connect to.(e.g. 3306).' },
+            { fieldName: 'Username*', id: 'username', type: 'text', mandatory: true, validity: true, hints: 'The username which is used to access the database.' },
+            { fieldName: 'Database*', id: 'database', type: 'text', mandatory: true, validity: true, hints: 'The database name.' },
+            { fieldName: 'Password', id: 'password', type: 'text', mandatory: true, validity: true, hints: 'The password associated with the username.' },
+            { fieldName: 'JDBC URL Params', id: 'jdbcurlparams', mandatory: false, validity: true, type: 'text', hints: 'Additional properties to pass to the jdbc url string when connecting to the database formatted as keyvalue pairs separated by the symbol &. (example: key1=value1&key2=value2&key3=value3).' },
+            { fieldName: 'SSL Connection', id: 'sslconnection', mandatory: true, validity: true, type: 'toggle', hints: 'Encrypt data using SSL.' },
             {
                 fieldName: 'Replication Method*',
                 id: 'replicationmethod',
                 type: 'dropdown',
                 validity: true,
+                mandatory: true,
                 hints: 'Replication method which is used for data extraction from the database. STANDARD replication requires no setup on the DB side but will not be able to represent deletions incrementally. CDC uses the Binlog to detect inserts, updates, and deletes. This needs to be configured on the source database itself.',
                 dropdownlist: [
                     { name: 'Standard', code: 'Standard' },
@@ -49,6 +50,7 @@ const fields = [
                 id: 'sshtunnelmethod',
                 type: 'dropdown',
                 validity: true,
+                mandatory: true,
                 hints: 'Whether to initiate an SSH tunnel before connecting to the database, and if so, which kind of authentication to use.',
                 dropdownlist: [
                     { name: 'No tunnel', code: 'Notunnel' },
@@ -60,33 +62,34 @@ const fields = [
     },
     {
         sourcetype: 'QuickBooks', field: [
-            { fieldName: 'Sanbox', id: 'sandbox', type: 'toggle', validity: true, hints: 'Determines whether to use the sandbox or production environment.' },
-            { fieldName: 'Realm ID*', id: 'realmid', type: 'text', validity: true, hints: 'Labeled Company ID. The Make API Calls panel is populated with the realm id and the current access token.' },
-            { fieldName: 'Client ID*', id: 'clientid', type: 'text', validity: true, hints: 'Identifies which app is making the request. Obtain this value from the Keys tab on the app profile via My Apps on the developer site. There are two versions of this key: development and production.' },
-            { fieldName: 'Start Date*', id: 'startdatequickbook', type: 'date', validity: true, hints: 'The default value to use if no bookmark exists for an endpoint (rfc3339 date string). E.g, 2021-03-20T00:00:00Z. Any data before this date will not be replicated. (e.g. 2021-03-20T00:00:00Z)' },
-            { fieldName: 'User Agent*', id: 'useragent', type: 'text', validity: true, hints: 'Process and email for API logging purposes. Example: tap-quickbooks.' },
-            { fieldName: 'Client Secret*', id: 'clientsecret', type: 'text', validity: true, hints: 'Obtain this value from the Keys tab on the app profile via My Apps on the developer site. There are two versions of this key: development and production.' },
-            { fieldName: 'Refresh Token*', id: 'refreshtoken', type: 'text', validity: true, hints: 'A token used when refreshing the access token.' },
+            { fieldName: 'Sanbox', id: 'sandbox', type: 'toggle', mandatory: true, validity: true, hints: 'Determines whether to use the sandbox or production environment.' },
+            { fieldName: 'Realm ID*', id: 'realmid', type: 'text', mandatory: true, validity: true, hints: 'Labeled Company ID. The Make API Calls panel is populated with the realm id and the current access token.' },
+            { fieldName: 'Client ID*', id: 'clientid', type: 'text', mandatory: true, validity: true, hints: 'Identifies which app is making the request. Obtain this value from the Keys tab on the app profile via My Apps on the developer site. There are two versions of this key: development and production.' },
+            { fieldName: 'Start Date*', id: 'startdatequickbook', type: 'date', mandatory: true, validity: true, hints: 'The default value to use if no bookmark exists for an endpoint (rfc3339 date string). E.g, 2021-03-20T00:00:00Z. Any data before this date will not be replicated. (e.g. 2021-03-20T00:00:00Z)' },
+            { fieldName: 'User Agent*', id: 'useragent', type: 'text', mandatory: true, validity: true, hints: 'Process and email for API logging purposes. Example: tap-quickbooks.' },
+            { fieldName: 'Client Secret*', id: 'clientsecret', type: 'text', mandatory: true, validity: true, hints: 'Obtain this value from the Keys tab on the app profile via My Apps on the developer site. There are two versions of this key: development and production.' },
+            { fieldName: 'Refresh Token*', id: 'refreshtoken', type: 'text', mandatory: true, validity: true, hints: 'A token used when refreshing the access token.' },
         ]
     },
     {
         sourcetype: 'BigCommerce', field: [
-            { fieldName: 'Start Date*', id: 'startdatebigcommerce', type: 'date', validity: true, hints: 'The date you would like to replicate data. Format: YYYY-MM-DD. (e.g. 2021-01-01)' },
-            { fieldName: 'Store Hash*', id: 'storehash', type: 'text', validity: true, hints: "The hash code of the store. For https://api.bigcommerce.com/stores/HASH_CODE/v3/, The store's hash code is 'HASH_CODE'." },
-            { fieldName: 'Access Token*', id: 'accesstoken', type: 'text', validity: true, hints: 'Access Token for making authenticated requests.' },
+            { fieldName: 'Start Date*', id: 'startdatebigcommerce', type: 'date', mandatory: true, validity: true, hints: 'The date you would like to replicate data. Format: YYYY-MM-DD. (e.g. 2021-01-01)' },
+            { fieldName: 'Store Hash*', id: 'storehash', type: 'text', mandatory: true, validity: true, hints: "The hash code of the store. For https://api.bigcommerce.com/stores/HASH_CODE/v3/, The store's hash code is 'HASH_CODE'." },
+            { fieldName: 'Access Token*', id: 'accesstoken', type: 'text', mandatory: true, validity: true, hints: 'Access Token for making authenticated requests.' },
         ]
     },
     {
         sourcetype: 'MongoDB', field: [
-            { fieldName: 'Database Name*', id: 'databaseName', type: 'text', validity: true, hints: ' The database you want to replicate.' },
-            { fieldName: 'User*', id: 'user', type: 'text', validity: true, hints: 'The username which is used to access the database.' },
-            { fieldName: 'Password*', id: 'password', type: 'text', validity: true, hints: 'The password associated with this username.' },
-            { fieldName: 'Authentication Source', id: 'authenticationSource', type: 'text', validity: true, hints: 'The authentication source where the user information is stored. (e.g. admin)' },
+            { fieldName: 'Database Name*', id: 'databaseName', type: 'text', mandatory: true, validity: true, hints: ' The database you want to replicate.' },
+            { fieldName: 'User*', id: 'user', type: 'text', mandatory: true, validity: true, hints: 'The username which is used to access the database.' },
+            { fieldName: 'Password*', id: 'password', type: 'text', mandatory: true, validity: true, hints: 'The password associated with this username.' },
+            { fieldName: 'Authentication Source', id: 'authenticationSource', mandatory: true, type: 'text', validity: true, hints: 'The authentication source where the user information is stored. (e.g. admin)' },
             {
                 fieldName: 'MongoDb Instance Type',
                 id: 'mongoDBInstance',
                 type: 'dropdown',
                 validity: true,
+                mandatory: true,
                 hints: 'The MongoDb instance to connect to. For MongoDB Atlas and Replica Set TLS connection is used by default.',
                 dropdownlist: [
                     { name: 'Standalone MongoDB Instance', code: 'standaloneMongodbInstance' },
@@ -94,25 +97,26 @@ const fields = [
                     { name: 'MongoDB Atlas', code: 'mongodbAtlas' },
                 ]
             },
-            { fieldName: 'Host*', id: 'host', type: 'text', validity: true, hints: ' The host name of the Mongo database.' },
-            { fieldName: 'Port*', id: 'port', type: 'text', validity: true, hints: 'The port of the Mongo database. (e.g. 27017)' },
-            { fieldName: 'TLS Connection*', id: 'tlsConnection', type: 'toggle', validity: true, hints: 'Indicates whether TLS encryption protocol will be used to connect to MongoDB. It is recommended to use TLS connection if possible.' }
+            { fieldName: 'Host*', id: 'host', type: 'text', mandatory: true, validity: true, hints: ' The host name of the Mongo database.' },
+            { fieldName: 'Port*', id: 'port', type: 'text', mandatory: true, validity: true, hints: 'The port of the Mongo database. (e.g. 27017)' },
+            { fieldName: 'TLS Connection*', id: 'tlsConnection', type: 'toggle', mandatory: true, validity: true, hints: 'Indicates whether TLS encryption protocol will be used to connect to MongoDB. It is recommended to use TLS connection if possible.' }
         ]
     },
     {
         sourcetype: 'MSSQL', field: [
-            { fieldName: 'Host*', id: 'host', type: 'text', validity: true, hints: 'The host name of the database.' },
-            { fieldName: 'Port*', id: 'port', type: 'text', validity: true, hints: 'The port to connect to. (e.g. 1433)' },
-            { fieldName: 'Databse*', id: 'database', type: 'text', validity: true, hints: 'The name of the database. (e.g. master)' },
-            { fieldName: 'Username*', id: 'username', type: 'text', validity: true, hints: 'The username which is used to access the database.' },
-            { fieldName: 'Password*', id: 'password', type: 'text', validity: true, hints: 'The password associated with the username.' },
-            { fieldName: 'JDBC URL Params', id: 'jdbcurlparams', type: 'text', validity: true, hints: "Additional properties to pass to the jdbc url string when connecting to the database formatted as 'key=value' pairs separated by the symbol '&'. (example: key1=value1&key2=value2&key3=value3)." },
-            { fieldName: 'SSL Connection', id: 'sslconnection', type: 'toggle', validity: true, hints: 'Encrypt data using SSL.' },
+            { fieldName: 'Host*', id: 'host', type: 'text', mandatory: true, validity: true, hints: 'The host name of the database.' },
+            { fieldName: 'Port*', id: 'port', type: 'text', mandatory: true, validity: true, hints: 'The port to connect to. (e.g. 1433)' },
+            { fieldName: 'Databse*', id: 'database', type: 'text', mandatory: true, validity: true, hints: 'The name of the database. (e.g. master)' },
+            { fieldName: 'Username*', id: 'username', type: 'text', mandatory: true, validity: true, hints: 'The username which is used to access the database.' },
+            { fieldName: 'Password*', id: 'password', type: 'text', mandatory: true, validity: true, hints: 'The password associated with the username.' },
+            { fieldName: 'JDBC URL Params', id: 'jdbcurlparams', type: 'text', mandatory: false, validity: true, hints: "Additional properties to pass to the jdbc url string when connecting to the database formatted as 'key=value' pairs separated by the symbol '&'. (example: key1=value1&key2=value2&key3=value3)." },
+            { fieldName: 'SSL Connection', id: 'sslconnection', type: 'toggle', mandatory: true, validity: true, hints: 'Encrypt data using SSL.' },
             {
                 fieldName: 'Replication Method*',
                 id: 'replicationmethod',
                 type: 'dropdown',
                 validity: true,
+                mandatory: true,
                 hints: 'Replication method which is used for data extraction from the database. STANDARD replication requires no setup on the DB side but will not be able to represent deletions incrementally. CDC uses the Binlog to detect inserts, updates, and deletes. This needs to be configured on the source database itself.',
                 dropdownlist: [
                     { name: 'Standard', code: 'Standard' },
@@ -124,6 +128,7 @@ const fields = [
                 id: 'sshtunnelmethodCertificate',
                 type: 'dropdown',
                 validity: true,
+                mandatory: true,
                 hints: 'The encryption method which is used when communicating with the database.',
                 dropdownlist: [
                     { name: 'Unencrypted', code: 'unencrypted' },
@@ -136,6 +141,7 @@ const fields = [
                 id: 'sshtunnelmethod',
                 type: 'dropdown',
                 validity: true,
+                mandatory: true,
                 hints: 'Whether to initiate an SSH tunnel before connecting to the database, and if so, which kind of authentication to use.',
                 dropdownlist: [
                     { name: 'No tunnel', code: 'Notunnel' },
@@ -151,25 +157,25 @@ const subFields = [
     {
         dropdowntype: 'SSHKeyAuthentication',
         field: [
-            { fieldName: 'SSH Tunnel Jump Server Host', id: 'sshtnneljumpserverhostkeyauth', type: 'text', validity: true, hints: 'Hostname of the jump server host that allows inbound ssh tunnel.' },
-            { fieldName: 'SSH Connection Port*', id: 'sshconnectionportkeyauth', type: 'text', validity: true, hints: 'Port on the proxy/jump server that accepts inbound ssh connections. (e.g. 22)' },
-            { fieldName: 'SSH Login Username*', id: 'sshloginusernamekeyauth', type: 'text', validity: true, hints: 'OS-level username for logging into the jump server host.' },
-            { fieldName: 'SSH Private Key*', id: 'sshprivatekeykeyauth', type: 'text', validity: true, hints: 'OS-level user account ssh key credentials in RSA PEM format ( created with ssh-keygen -t rsa -m PEM -f myuser_rsa )' },
+            { fieldName: 'SSH Tunnel Jump Server Host', id: 'sshtnneljumpserverhostkeyauth', type: 'text', mandatory: true, validity: true, hints: 'Hostname of the jump server host that allows inbound ssh tunnel.' },
+            { fieldName: 'SSH Connection Port*', id: 'sshconnectionportkeyauth', type: 'text', mandatory: true, validity: true, hints: 'Port on the proxy/jump server that accepts inbound ssh connections. (e.g. 22)' },
+            { fieldName: 'SSH Login Username*', id: 'sshloginusernamekeyauth', type: 'text', mandatory: true, validity: true, hints: 'OS-level username for logging into the jump server host.' },
+            { fieldName: 'SSH Private Key*', id: 'sshprivatekeykeyauth', type: 'text', mandatory: true, validity: true, hints: 'OS-level user account ssh key credentials in RSA PEM format ( created with ssh-keygen -t rsa -m PEM -f myuser_rsa )' },
         ]
     },
     {
         dropdowntype: 'PasswordAuthentication',
         field: [
-            { fieldName: 'SSH Tunnel Jump Server Host', id: 'sshtnneljumpserverhostpassauth', type: 'text', validity: true, hints: 'Hostname of the jump server host that allows inbound ssh tunnel.' },
-            { fieldName: 'SSH Connection Port*', id: 'sshconnectionportpassauth', type: 'text', validity: true, hints: 'Port on the proxy/jump server that accepts inbound ssh connections. (e.g. 22)' },
-            { fieldName: 'SSH Login Username*', id: 'sshloginusernamepassauth', type: 'text', validity: true, hints: 'OS-level username for logging into the jump server host.' },
-            { fieldName: 'Password*', id: 'sshpasswordpassauth', type: 'text', validity: true, hints: 'OS-level password for logging into the jump server host.' },
+            { fieldName: 'SSH Tunnel Jump Server Host', id: 'sshtnneljumpserverhostpassauth', type: 'text', mandatory: true, validity: true, hints: 'Hostname of the jump server host that allows inbound ssh tunnel.' },
+            { fieldName: 'SSH Connection Port*', id: 'sshconnectionportpassauth', type: 'text', mandatory: true, validity: true, hints: 'Port on the proxy/jump server that accepts inbound ssh connections. (e.g. 22)' },
+            { fieldName: 'SSH Login Username*', id: 'sshloginusernamepassauth', type: 'text', mandatory: true, validity: true, hints: 'OS-level username for logging into the jump server host.' },
+            { fieldName: 'Password*', id: 'sshpasswordpassauth', type: 'text', mandatory: true, validity: true, hints: 'OS-level password for logging into the jump server host.' },
         ]
     },
     {
         dropdowntype: 'EncryptedVerifyCertificate',
         field: [
-            { fieldName: 'Host Name In Certificate', id: 'hostNameinCertificate', type: 'text', validity: true, hints: 'Specifies the host name of the server. The value of this property must match the subject property of the certificate.' },
+            { fieldName: 'Host Name In Certificate', id: 'hostNameinCertificate', type: 'text', mandatory: true, validity: true, hints: 'Specifies the host name of the server. The value of this property must match the subject property of the certificate.' },
         ]
     }
 ]
@@ -666,11 +672,13 @@ const Setups = (props) => {
             let obj = configObj;
             let listField = fields.filter((item) => item.sourcetype === setupInitials.SourceType.code);
             listField = listField[0].field;
-            
+
             for (let i = 0; i < listField.length; i++) {
-                if (obj[listField[i].id] === "" || obj[listField[i].id] === undefined || obj[listField[i].id] === null) {
-                    listField[i].validity = false;
-                    checked = false;
+                if (obj[listField[i].mandatory] === true) {
+                    if (obj[listField[i].id] === "" || obj[listField[i].id] === undefined || obj[listField[i].id] === null) {
+                        listField[i].validity = false;
+                        checked = false;
+                    }
                 }
             }
 
@@ -678,12 +686,14 @@ const Setups = (props) => {
                 if (setupsourceConfiguration.MySql.sshtunnelmethod !== null) {
                     let subObj = obj[setupsourceConfiguration.MySql.sshtunnelmethod.code];
                     let subdropdownFields = subFields.filter((item) => item.dropdowntype === setupsourceConfiguration.MySql.sshtunnelmethod.code);
-                    if(subdropdownFields.length>0){
+                    if (subdropdownFields.length > 0) {
                         subdropdownFields = subdropdownFields[0].field;
                         for (let i = 0; i < subdropdownFields.length; i++) {
-                            if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
-                                subdropdownFields[i].validity = false;
-                                checked = false;
+                            if (subObj[subdropdownFields[i].mandatory] === true) {
+                                if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
+                                    subdropdownFields[i].validity = false;
+                                    checked = false;
+                                }
                             }
                         }
                     }
@@ -697,9 +707,11 @@ const Setups = (props) => {
                     if (subdropdownFields.length > 0) {
                         subdropdownFields = subdropdownFields[0].field;
                         for (let i = 0; i < subdropdownFields.length; i++) {
-                            if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
-                                subdropdownFields[i].validity = false;
-                                checked = false;
+                            if (subObj[subdropdownFields[i].mandatory] === true) {
+                                if (subObj[subdropdownFields[i].id] === "" || subObj[subdropdownFields[i].id] === undefined || subObj[subdropdownFields[i].id] === null) {
+                                    subdropdownFields[i].validity = false;
+                                    checked = false;
+                                }
                             }
                         }
                     }
