@@ -27,10 +27,11 @@ const Results = () => {
 
     useEffect(() => {
         let params = queryString.parse(window.location.search)
-        if (!params.shop) {
+        console.log({params})
+        if (params.shop != undefined || params.shop != null || Object.keys(params).length != 0) {
             localStorage.setItem("shop", params.shop);
         }
-        
+
         fetchResults();
         fetchSku();
     }, [])
