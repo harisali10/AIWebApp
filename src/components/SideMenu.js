@@ -61,7 +61,7 @@ const SideMenu = (props) => {
 
 
     const showPrivacyScreen = () => {
-        let url = "https://drive.google.com/file/d/1hfs1aTjM8rowsKfhNl0f_pci76mTs6pP/view"
+        let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
         window.open(
             url,
             "_blank",
