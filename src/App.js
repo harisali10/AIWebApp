@@ -91,9 +91,9 @@ const App = () => {
     useEffect(() => {
         getOptionList();
         let params = queryString.parse(window.location.search)
-        // localStorage.setItem("shop", params.shop);
-        localStorage.setItem("shop", "finosys.myshopify.com");
-        // tableApiCalls();
+        localStorage.setItem("shop", params.shop);
+        // localStorage.setItem("shop", "finosys.myshopify.com");
+        tableApiCalls();
     }, [])
 
     async function getOptionList() {
@@ -240,6 +240,7 @@ const App = () => {
             setMTable(false);
             setShowMsg(true);
         }
+        setOpen(false)
         // try {
         //     const logsRes = await axios.post(`${constant.url}GetPredictionResults`, {
         //         Header: {
