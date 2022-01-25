@@ -16,6 +16,7 @@ export const skuReducer = (state = initialState, action) => {
         case Types.SKU_ARRAY:
             return {
                 ...state,
+                skuArray:[],
                 skuArray: action.payload || state.skuArray,
             };
         case Types.RESET_SKU:

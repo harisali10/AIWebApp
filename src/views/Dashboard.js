@@ -48,7 +48,7 @@ const Dashboard = () => {
         }
         if (skuR.skuRes.skuArray.length > 0) {
             setSkuList(skuR.skuRes.skuArray)
-            dispatch(resetSkuArray())
+            // dispatch(resetSkuArray())
         }
 
     }, [skuR])
