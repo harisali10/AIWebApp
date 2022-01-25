@@ -699,7 +699,7 @@ const App = () => {
 
             <div style={{ marginTop: '120px' }}>
                 <div style={{ position: 'fixed', left: 0, bottom: 0, width: '100%', backgroundColor: '#3f51b5', color: 'white', textAlign: 'center', height: 60}}>
-                    <a  style={{ color: "white", fontSize: 25,  }} href="https://drive.google.com/file/d/1hfs1aTjM8rowsKfhNl0f_pci76mTs6pP/view?usp=sharing" target="_blank">Privacy</a>
+                    <a  style={{ color: "white", fontSize: 25,  }} href="https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing" target="_blank">Privacy</a>
                     <a style={{ color: "white", fontSize: 25, paddingLeft:35  }} href="mailto:arehman@theaisystems.com">Contact Us</a>
                 </div>
             </div>
