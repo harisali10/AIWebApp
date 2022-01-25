@@ -57,7 +57,7 @@ const TopBar = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        AI SYSTEMS
+                        PLAN AI
                     </Typography>
                     <Button color="inherit" onClick={() => showContactUs()}>
                         <Tooltip title="Contact Us">

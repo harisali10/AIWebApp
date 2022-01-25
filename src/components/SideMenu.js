@@ -79,7 +79,7 @@ const SideMenu = (props) => {
             <div className='p-grid'>
                 <div className='p-col-12' >
                     <List>
-                        <ListItem button component={Link} to="/" onClick={() => null}>
+                        <ListItem button  onClick={() => props.setSideMenu(false)}>
                             <ListItemIcon> <MenuIcon /> </ListItemIcon>
                             <ListItemText primary="AI SYSTEMS" />
                         </ListItem>
