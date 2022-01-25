@@ -27,8 +27,10 @@ const Results = () => {
 
     useEffect(() => {
         let params = queryString.parse(window.location.search)
-        localStorage.setItem("shop", params.shop);
-        // localStorage.setItem("shop", "finosys.myshopify.com");
+        if (!params.shop) {
+            localStorage.setItem("shop", params.shop);
+        }
+        
         fetchResults();
         fetchSku();
     }, [])
