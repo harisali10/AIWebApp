@@ -25,23 +25,10 @@ const Results = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // let params = queryString.parse(window.location.search)
-        localStorage.setItem("shop", "finosys.myshopify.com");
-        // if (localStorage.getItem("rows")) {
-        //     setTableData((prevState) =>
-        //     ({
-        //         ...prevState,
-        //         rows: localStorage.getItem("rows"),
-        //         columns: localStorage.getItem("columns"),
-        //         TableName: "Stock Out Dashboard"
-        //     }))
-
-
-        // }
-        // else {
-            fetchResults();
-
-        // }
+        let params = queryString.parse(window.location.search)
+        localStorage.setItem("shop", params.shop);
+        // localStorage.setItem("shop", "finosys.myshopify.com");
+        fetchResults();
         fetchSku();
     }, [])
 
