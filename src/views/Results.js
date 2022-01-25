@@ -6,6 +6,7 @@ import { setSkuArray } from "../store/action/action";
 import { useDispatch, useSelector } from 'react-redux';
 import BackDropLoader from "../components/BackDrop";
 import { Toast } from 'primereact/toast';
+import queryString from 'query-string';
 
 const constant = constants.getConstant();
 

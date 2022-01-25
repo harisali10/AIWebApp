@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import constants from '../src/utilities/constants';
-import queryString from 'query-string';
 import TopBar from './components/TopBar';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
