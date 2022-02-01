@@ -24,7 +24,7 @@ const Logs = () => {
                 Header: {
                     Type: 'Log',
 
-                    ShopURL: localStorage.getItem("shop")
+                    ShopURL: sessionStorage.getItem("shop")
                 }
             })
             setTableData((prevState) =>

@@ -79,8 +79,8 @@ const SideMenu = (props) => {
             <div className='p-grid'>
                 <div className='p-col-12' >
                     <List>
-                        <ListItem button  onClick={() => props.setSideMenu(false)}>
-                            <ListItemIcon> <MenuIcon /> </ListItemIcon>
+                        <ListItem button onClick={() => props.setSideMenu(false)}>
+                            <ListItemIcon style={{ color: "#61ab8e" }}> <MenuIcon /> </ListItemIcon>
                             <ListItemText primary="AI SYSTEMS" />
                         </ListItem>
                     </List>
@@ -93,7 +93,7 @@ const SideMenu = (props) => {
                                 <div className='p-col-12'>
                                     <List>
                                         <ListItem button to={item.path} component={Link} onClick={(e) => handleMenuClick(e)}>
-                                            <ListItemIcon> {item.menuItemIcon} </ListItemIcon>
+                                            <ListItemIcon style={{ color: "#61ab8e" }}> {item.menuItemIcon} </ListItemIcon>
                                             <ListItemText primary={item.menuItemName} />
                                         </ListItem>
 
@@ -104,7 +104,7 @@ const SideMenu = (props) => {
                         })
                     }
                     <ListItem button onClick={(e) => showPrivacyScreen()}>
-                        <ListItemIcon> <LockIcon /></ListItemIcon>
+                        <ListItemIcon style={{ color: "#61ab8e", paddingLeft: 7 }}>  <LockIcon /></ListItemIcon>
                         <ListItemText primary={"PRIVACY"} />
                     </ListItem>
 

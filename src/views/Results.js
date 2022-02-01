@@ -15,26 +15,31 @@ const constant = constants.getConstant();
 
 const Results = () => {
 
-
     const [tableData, setTableData] = useState({ rows: [], columns: [], TableName: '' })
-
     const [showLoader, setShowLoader] = useState(false)
     const toast = React.useRef(null);
-
-
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         let params = queryString.parse(window.location.search)
-        console.log({params})
+        console.log({ params })
         if (params.shop != undefined || params.shop != null || Object.keys(params).length != 0) {
-            localStorage.setItem("shop", params.shop);
+            sessionStorage.setItem('shop', params.shop);
         }
+
+
 
         fetchResults();
         fetchSku();
     }, [])
+
+
+
+    window.addEventListener("beforeunload", (ev) => {
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
 
 
     async function fetchResults() {
@@ -45,7 +50,7 @@ const Results = () => {
                     ClientID: 1,
                     Type: 'Result',
                     // ShopURL:""
-                    ShopURL: localStorage.getItem("shop")
+                    ShopURL: sessionStorage.getItem("shop")
                 }
             })
             if (res.data.Message.rows.length != 0) {
@@ -57,9 +62,7 @@ const Results = () => {
                     columns: res.data.Message.columns,
                     TableName: "Stock Out Dashboard"
                 }))
-                localStorage.setItem("rows", res.data.Message.rows)
-                localStorage.setItem("columns", res.data.Message.columns)
-
+             
                 // setShowMsg(false);
             }
             // else {
@@ -85,7 +88,7 @@ const Results = () => {
         try {
             let options = await axios.post(`${constant.url}lookup`, {
                 Header: {
-                    ShopURL: localStorage.getItem("shop")
+                    ShopURL: sessionStorage.getItem("shop")
                 }
             })
             dispatch(setSkuArray(options.data.Message))

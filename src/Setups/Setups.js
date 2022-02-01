@@ -279,7 +279,7 @@ const Setups = (props) => {
 
     useEffect(() => {
         setLoading(true);
-        axios.post(`${constant.url}GetStockSetupSource`, { Header: { ShopURL: localStorage.getItem("shop") } })
+        axios.post(`${constant.url}GetStockSetupSource`, { Header: { ShopURL: sessionStorage.getItem("shop") } })
             .then(function (response) {
                 if (response.data.Success === true) {
                     if (response.data.Message !== null) {
@@ -620,7 +620,7 @@ const Setups = (props) => {
                     SourceType: setupInitials.SourceType.code,
                     SourceConfiguration: Configuration,
                     ClientID: 21,
-                    ShopURL: localStorage.getItem("shop"),
+                    ShopURL: sessionStorage.getItem("shop"),
                     Type: 'CreateSetupSource'
                 }
 

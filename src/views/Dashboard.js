@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Line, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from 'recharts';
-import { Divider, Typography } from '@material-ui/core';
+import { Divider, Typography, Card, CardActions, CardContent, Button, Paper, Collapse, FormControlLabel, Switch } from '@material-ui/core';
 import PopupLookup from '../PopUpLookUp';
+import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import constants from '../utilities/constants';
 import { resetSkuValue, resetSkuArray } from '../store/action/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
 import BackDropLoader from "../components/BackDrop";
+// import { motion } from "framer-motion"
 
 let skuColumns = [
     { title: 'Sku', field: 'sku' },
@@ -15,6 +17,35 @@ let skuColumns = [
     { title: 'Product Type', field: 'product_type' }
 
 ];
+
+const useStyles = makeStyles({
+    root: {
+        minWidth: 275,
+    },
+    bullet: {
+        display: 'inline-block',
+        margin: '0 2px',
+        transform: 'scale(0.8)',
+    },
+    title: {
+        fontSize: 14,
+    },
+    pos: {
+        marginBottom: 12,
+    },
+    container: {
+        display: 'flex',
+    },
+    paper: {
+        backgroundColor: 'blue',
+    },
+    svg: {
+        width: 100,
+        height: 100,
+    },
+});
+
+
 
 const Dashboard = () => {
 
@@ -38,8 +69,18 @@ const Dashboard = () => {
     const [skuList, setSkuList] = useState([]);
     const [PoupUpLookupOpen, setPoupUpLookupOpen] = useState(false);
 
+    const classes = useStyles();
+    const bull = <span className={classes.bullet}>•</span>;
+
 
     const skuR = useSelector(skuRes => skuRes)
+
+    const [checked, setChecked] = React.useState(false);
+
+    const handleChange = () => {
+        setChecked((prev) => !prev);
+    };
+
 
     useEffect(() => {
         if (skuR.skuRes.skuValue) {
@@ -53,37 +94,27 @@ const Dashboard = () => {
 
     }, [skuR])
 
-    // useEffect(() => {
-    //     if (skuR.skuRes.skuArray) {
-
-    //     }
-    // }, [skuR.skuRes.skuArray])
-
-
-
-
-
     const setLookUpData = async (e, rowData) => {
         setPoupUpLookupOpen(false)
         setShowLoader(true)
         let payload = {
             sku: rowData.sku,
-            ShopURL: localStorage.getItem("shop")
+            ShopURL: sessionStorage.getItem("shop")
         }
         try {
             let GetData = await axios.post(`${constant.url}GetData`, payload)
             setFdfData((prevState) => ({
                 ...prevState,
-                averageSales: GetData.data.Message.FDF_Data[0]['AverageSales'],
-                projectedRevLoss: GetData.data.Message.FDF_Data[0]['ProjectedRevLoss'],
-                projectedSales: GetData.data.Message.FDF_Data[0]['ProjectedSales'],
-                reOrderQty: GetData.data.Message.FDF_Data[0]['ReOrderQty'],
-                totalRevenue: GetData.data.Message.FDF_Data[0]['TotalRevenue'].toFixed(2),
-                totalSalesQty: GetData.data.Message.FDF_Data[0]['TotalSaleQty'],
-                totalWeeks: GetData.data.Message.FDF_Data[0]['TotalWeeks']
+                averageSales: GetData.data.Message.FDF_Data[0]['AverageSales'].toFixed(),
+                projectedRevLoss: GetData.data.Message.FDF_Data[0]['ProjectedRevLoss'].toFixed(),
+                projectedSales: GetData.data.Message.FDF_Data[0]['ProjectedSales'].toFixed(),
+                reOrderQty: GetData.data.Message.FDF_Data[0]['ReOrderQty'].toFixed(),
+                totalRevenue: GetData.data.Message.FDF_Data[0]['TotalRevenue'].toFixed(),
+                totalSalesQty: GetData.data.Message.FDF_Data[0]['TotalSaleQty'].toFixed(),
+                totalWeeks: GetData.data.Message.FDF_Data[0]['TotalWeeks'].toFixed()
             }))
             setData(GetData.data.Message.Dashboard.rows)
-      
+
         }
         catch (e) {
         }
@@ -99,8 +130,29 @@ const Dashboard = () => {
         </BackDropLoader>
 
         <div style={{ overflowX: 'hidden' }}>
+            {/* <FormControlLabel
+                control={<Switch checked={checked} onChange={handleChange} />}
+                label="Show"
+            />
+            <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => null}
+                color="primary"
+            >
+                Launch
+            </motion.button> */}
             <div className='p-grid'>
-                <div className='p-col-12 p-md-9 p-lg-8'>
+                {/* <div className="p-col-12 p-md-12 p-lg-12" >
+                    <Collapse in={checked}>
+                        <Paper elevation={4} className={classes.paper}>
+                            <svg className={classes.svg}>
+                                <polygon points="0,100 50,00, 100,100" className={classes.polygon} />
+                            </svg>
+                        </Paper>
+                    </Collapse>
+                </div> */}
+                <div className='p-col-12 p-md-9 p-lg-9'>
                     <ResponsiveContainer width="99%" height="50%" aspect={3}>
                         <ComposedChart
                             width={1480}
@@ -150,97 +202,83 @@ const Dashboard = () => {
                     </ResponsiveContainer>
 
                 </div>
-                <div className='p-col-12 p-md-3 p-lg-4' style={{ paddingRight: 25 }}>
-                    {/* <h5>Haris Ali</h5> */}
-                    <div className="card card-w-title " style={{ boxShadow: "-1px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)" }} >
-                        <div className='p-grid'>
-                            <div className='p-col-1'>
+                <div className="p-col-12 p-md-3 p-lg-3" style={{ paddingLeft: 14 }} >
+                    <Card >
+                        <div className="p-grid p-justify-center" style={{ backgroundColor: "#61ab8e" }}>
+                            <div className='p-col-6'>
+                                <h1 style={{ color: 'white', fontFamily: 'Georgia' }}>NUMBERS</h1>
                             </div>
-                            <div className='p-col-11'>
-                                <h1 style={{ color: '#56af8e' }}>Numbers</h1>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
 
-                                <Typography variant="h6">Re Order Qty</Typography>
-                            </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.reOrderQty}</Typography>
-                                {/* <p>123</p> */}
-                            </div>
                         </div>
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
-                                <Typography variant="h6">Total Weeks</Typography>
+                        {/* <Divider /> */}
+                        <div className="p-grid" style={{ backgroundColor: "#f2f2f2" }}>
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}  >&nbsp;Re Order Qty</Typography>
+                            </div>
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" align="center" >{fdfData.reOrderQty}</Typography>
+                            </div>
 
-                            </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.totalWeeks}</Typography>
-                                {/* <p>123</p> */}
-                            </div>
                         </div>
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
-                                <Typography variant="h6">Average Sales</Typography>
+                        {/* <Divider /> */}
+                        <div className="p-grid">
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >&nbsp;Total Weeks</Typography>
+                            </div>
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" align="center">{fdfData.totalWeeks}</Typography>
+                            </div>
 
-                                {/* <p>Average Sales</p> */}
-                            </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.averageSales}</Typography>
-                                {/* <p>123</p> */}
-                            </div>
                         </div>
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
-                                <Typography variant="h6"> Total Sales Quantity</Typography>
-                                {/* <p> Total Sales Quantity</p> */}
+                        {/* <Divider /> */}
+                        <div className="p-grid" style={{ backgroundColor: "#f2f2f2" }}>
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >&nbsp;Average Sales</Typography>
                             </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.totalSalesQty}</Typography>
-                                {/* <p>123</p> */}
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" align="center">{fdfData.averageSales}</Typography>
                             </div>
+
                         </div>
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
-                                <Typography variant="h6">Total Revenue</Typography>
+                        <div className="p-grid" >
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >&nbsp;Total Sales Quantity</Typography>
                             </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.totalRevenue}</Typography>
-                                {/* <p>123</p> */}
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" align="center">{fdfData.totalSalesQty}</Typography>
                             </div>
+
                         </div>
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
-                                <Typography variant="h6"> Projected Sales</Typography>
-                                {/* <p> Projected Sales</p> */}
+                        <div className="p-grid" style={{ backgroundColor: "#f2f2f2" }}>
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>&nbsp;Projected Sales</Typography>
                             </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.projectedSales}</Typography>
-                                {/* <p>123</p> */}
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" align="center">{fdfData.projectedSales}</Typography>
                             </div>
+
                         </div>
-                        <div className='p-grid'>
-                            <div className="p-col-1"></div>
-                            <div className='p-col-7'>
-                                <Typography variant="h6"> Projected Revenue Loss</Typography>
-                                {/* <p> Projected Revenue Loss</p> */}
+                        <div className="p-grid" >
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>&nbsp;Projected Revenue Lost</Typography>
                             </div>
-                            <div className='p-col-4'>
-                                <Typography variant="h6">{fdfData.projectedRevLoss}</Typography>
-                                {/* <p>123</p> */}
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" align="center">{fdfData.projectedRevLoss}</Typography>
                             </div>
+
                         </div>
-                        <Divider />
-                    </div>
+                        <div className="p-grid " style={{ backgroundColor: "#f2f2f2" }}>
+                            <div className='p-col-6'>
+                                <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>&nbsp;Total Revenue</Typography>
+                            </div>
+                            <div className='p-col-6 '>
+                                <Typography variant="subtitle1" align="center">{fdfData.totalRevenue}</Typography>
+                            </div>
+
+                        </div>
+                    </Card>
                 </div>
+
             </div>
 
             <PopupLookup

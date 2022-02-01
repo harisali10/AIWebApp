@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         flexGrow: 1,
+        fontFamily:'Georgia'
     },
     drawer: {
         width: 210
@@ -56,7 +57,7 @@ const TopBar = () => {
                     <IconButton edge="start" className={classes.menuButton} onClick={() => setSideMenu(true)} color="inherit" aria-label="menu">
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6" className={classes.title} >
                         PLAN AI
                     </Typography>
                     <Button color="inherit" onClick={() => showContactUs()}>
