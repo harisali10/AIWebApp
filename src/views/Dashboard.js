@@ -9,7 +9,7 @@ import { resetSkuValue, resetSkuArray } from '../store/action/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
 import BackDropLoader from "../components/BackDrop";
-// import { motion } from "framer-motion"
+import { motion } from "framer-motion"
 
 let skuColumns = [
     { title: 'Sku', field: 'sku' },
@@ -133,8 +133,8 @@ const Dashboard = () => {
             {/* <FormControlLabel
                 control={<Switch checked={checked} onChange={handleChange} />}
                 label="Show"
-            />
-            <motion.button
+            /> */}
+            {/* <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => null}
@@ -202,7 +202,7 @@ const Dashboard = () => {
                     </ResponsiveContainer>
 
                 </div>
-                <div className="p-col-12 p-md-3 p-lg-3" style={{ paddingLeft: 14 }} >
+                <div className="p-col-12 p-md-3 p-lg-3" style={{ paddingRight: 20 }} >
                     <Card >
                         <div className="p-grid p-justify-center" style={{ backgroundColor: "#61ab8e" }}>
                             <div className='p-col-6'>
