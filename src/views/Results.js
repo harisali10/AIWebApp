@@ -18,6 +18,7 @@ const Results = () => {
     const [tableData, setTableData] = useState({ rows: [], columns: [], TableName: '' })
     const [customers, setCustomers] = useState([])
     const [orders, setOrders] = useState([])
+    // const [clientId, setClientId] = useState()
     const [products, setProducts] = useState([])
     const [showLoader, setShowLoader] = useState(false)
     const toast = React.useRef(null);
@@ -31,7 +32,6 @@ const Results = () => {
             sessionStorage.setItem('shop', params.shop);
         }
         getClientInfo();
-        fetchResults();
         fetchSku();
     }, [])
 
@@ -43,12 +43,12 @@ const Results = () => {
     });
 
 
-    async function fetchResults() {
+    async function fetchResults(clientId) {
         setShowLoader(true)
         try {
             const res = await axios.post(`${constant.url}GetPredictionResults`, {
                 Header: {
-                    ClientID: 1,
+                    ClientID: clientId,
                     Type: 'Result',
                     ShopURL: sessionStorage.getItem("shop")
                 }
@@ -104,19 +104,22 @@ const Results = () => {
 
     }
 
-
     async function getClientInfo() {
         // setShowLoader(true)
         try {
             const res = await axios.post(`${constant.url}GetClientInfo`, {
                 Header: {
-                    ClientID: 1,
                     Type: 'Result',
                     ShopURL: sessionStorage.getItem("shop")
                 }
             })
             console.log("accessToken", res.data.Message.accessToken)
-            getShopifyData(res.data.Message.accessToken)
+            // setClientId(res.data.Message.clientID)
+            perfoamShopfiyOperations()
+            fetchResults(res.data.Message.clientID);
+           
+
+            // getShopifyData(res.data.Message.accessToken)
 
 
         }
@@ -130,6 +133,21 @@ const Results = () => {
         }
         // setShowLoader(false)
     }
+
+    async function perfoamShopfiyOperations() {
+        axios.post(`${constant.url}GetShopifyData`, {
+            Header: {
+                ShopURL: sessionStorage.getItem("shop")
+            }
+        })
+            .then(function (response) {
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }
+
 
     async function getShopifyData(token) {
         try {
