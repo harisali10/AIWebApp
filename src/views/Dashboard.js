@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Line, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from 'recharts';
-import { Divider, Typography, Card, CardActions, CardContent, Button, Paper, Collapse, FormControlLabel, Switch } from '@material-ui/core';
+import { Divider, Typography, Card, CardActions, CardContent, Button, Paper, FormControlLabel, Switch } from '@material-ui/core';
 import PopupLookup from '../PopUpLookUp';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import constants from '../utilities/constants';
 import { resetSkuValue, resetSkuArray } from '../store/action/action';
 import { useDispatch, useSelector } from 'react-redux';
+import Collapse from '@material-ui/core/Collapse';
 import { Toast } from 'primereact/toast';
 import BackDropLoader from "../components/BackDrop";
 import { motion } from "framer-motion"
@@ -130,10 +131,17 @@ const Dashboard = () => {
         </BackDropLoader>
 
         <div style={{ overflowX: 'hidden' }}>
-            {/* <FormControlLabel
+            <FormControlLabel
                 control={<Switch checked={checked} onChange={handleChange} />}
                 label="Show"
-            /> */}
+            />
+
+
+            {/* <div className={classes.container}> */}
+            <Collapse in={checked} style={{ paddingLeft: 12 }}>
+                <Card >Haris</Card>
+            </Collapse>
+            {/* </div> */}
             {/* <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}

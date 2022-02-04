@@ -4,14 +4,26 @@ import axios from 'axios';
 import constants from '../../src/utilities/constants';
 import { setSkuArray } from "../store/action/action";
 import { useDispatch, useSelector } from 'react-redux';
+import Dialog from '@material-ui/core/Dialog';
 import BackDropLoader from "../components/BackDrop";
+import Typography from '@material-ui/core/Typography';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
 import { Toast } from 'primereact/toast';
 import queryString from 'query-string';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Slide from '@material-ui/core/Slide';
+import { useTheme } from '@material-ui/core/styles';
+
 
 const constant = constants.getConstant();
 
-
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Results = () => {
 
@@ -22,6 +34,9 @@ const Results = () => {
     const [products, setProducts] = useState([])
     const [showLoader, setShowLoader] = useState(false)
     const toast = React.useRef(null);
+    const [open, setOpen] = React.useState(true);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const dispatch = useDispatch();
 
@@ -34,14 +49,6 @@ const Results = () => {
         getClientInfo();
         fetchSku();
     }, [])
-
-
-
-    window.addEventListener("beforeunload", (ev) => {
-        ev.preventDefault();
-        return ev.returnValue = 'Are you sure you want to close?';
-    });
-
 
     async function fetchResults(clientId) {
         setShowLoader(true)
@@ -65,10 +72,11 @@ const Results = () => {
 
                 // setShowMsg(false);
             }
-            // else {
-            //     setShowDashboardText("We are working on your Data, Please be patient...") // Res set for DashBoards
+            else {
+                setOpen(true);
+                // setShowDashboardText("We are working on your Data, Please be patient...") // Res set for DashBoards
 
-            // }
+            }
 
         }
         catch (e) {
@@ -117,7 +125,7 @@ const Results = () => {
             // setClientId(res.data.Message.clientID)
             perfoamShopfiyOperations()
             fetchResults(res.data.Message.clientID);
-           
+
 
             // getShopifyData(res.data.Message.accessToken)
 
@@ -148,7 +156,7 @@ const Results = () => {
 
     }
 
-
+    // Still Unsed cant access shopify from front end 
     async function getShopifyData(token) {
         try {
             let customerUrl = `https://${sessionStorage.getItem("shop")}/admin/api/2021-10/customers.json`;
@@ -198,10 +206,73 @@ const Results = () => {
 
     }
 
-    return (<>
-        <BackDropLoader backDrop={showLoader}>
+    window.addEventListener("beforeunload", (ev) => {
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
 
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
+    return (<>
+
+
+        <BackDropLoader backDrop={showLoader}>
         </BackDropLoader>
+
+
+        <Dialog
+            fullScreen={fullScreen}
+            open={open}
+            TransitionComponent={Transition}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle>
+                <Typography variant="h5" align="center" style={{ color: '#61ab8e', fontFamily: 'Georgia' }} >
+                    Welcome to Plan AI
+                </Typography>
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >
+                        Plan AI is currently working on pulling your Sales and Product data from shopify auotmatically.
+                        However for the app to function properly PLAN AI needs your historical Purchase order and historical inventory data.
+                    </Typography>
+                    {/* </DialogContentText> */}
+                    <Typography variant="subtitle1" align="center" style={{ color: '#61ab8e', fontStyle: 'italic', paddingTop: 7, paddingBottom: 7 }} >
+                        Please follow the steps below to complete the setup process.
+                    </Typography>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >
+                        1. Navigate to the setup page by clicking on the Menu Icon in the top left corner and select SETUP.
+                    </Typography>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >
+                        2. Enter your name and select the source that hosts your Purchase Order data.
+                    </Typography>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >
+                        3. Please fill out the form.
+                    </Typography>
+                    <Typography variant="subtitle1" align="center" style={{ color: '#61ab8e', fontStyle: 'italic' }}  >
+                        And You are Done!
+                    </Typography>
+
+                    <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
+                        If you have followed the steps above, please be patient your results will be displayed soon.
+                    </Typography>
+                </DialogContentText>
+
+            </DialogContent>
+            <DialogActions>
+
+                <Button onClick={handleClose} color="primary" autoFocus>
+                    OK ,I got it
+                </Button>
+            </DialogActions>
+        </Dialog>
+
+
         <Toast ref={toast} />
         <MaterialTable
             style={{
