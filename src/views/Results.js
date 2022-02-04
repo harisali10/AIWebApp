@@ -34,7 +34,7 @@ const Results = () => {
     const [products, setProducts] = useState([])
     const [showLoader, setShowLoader] = useState(false)
     const toast = React.useRef(null);
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -47,6 +47,7 @@ const Results = () => {
             sessionStorage.setItem('shop', params.shop);
         }
         getClientInfo();
+        // fetchResults();
         fetchSku();
     }, [])
 

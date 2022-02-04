@@ -32,7 +32,7 @@ const App = (props) => {
 
             <TopBar></TopBar>
             {/* <LinearProgress color='secondary' /> */}
-            <div className='p-grid p-justify-center' style={{ height: 130, position: 'relative', bottom: 10 }}>
+            <div className='p-grid p-justify-center' style={{ height: 130, position: 'relative', bottom: 2 }}>
                 <img src="assets/logo/ai_web_logo.png" alt="ai_logo" width="580px" height="220px" />
             </div>
         </div>

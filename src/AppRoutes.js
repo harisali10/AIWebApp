@@ -5,7 +5,9 @@ import Home from './views/home';
 import Results from './views/Results';
 import Logs from "./views/Logs";
 import Dashboard from "./views/Dashboard";
+// import test from "./views/test"
 import TopBar from './components/TopBar'
+
 import { Route, Link, withRouter, Switch } from "react-router-dom";
 
 const AppRoutes = () => {
@@ -18,6 +20,8 @@ const AppRoutes = () => {
                 <Route path="/logs" exact={true} component={Logs} />
                 <Route path="/haris" exact={true} component={Home} />
                 <Route path="/setup" exact={true} component={Setups} />
+                {/* <Route path="/test" exact={true} component={test} /> */}
+                {/*  */}
             </Switch>
 
         </div>

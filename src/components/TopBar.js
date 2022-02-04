@@ -60,6 +60,7 @@ const TopBar = () => {
                     <Typography variant="h6" className={classes.title} >
                         PLAN AI
                     </Typography>
+                    {/* <img src="assets/logo/AiLogo.png" alt="ai_logo" width="180px" height="120px" /> */}
                     <Button color="inherit" onClick={() => showContactUs()}>
                         <Tooltip title="Contact Us">
                             <ContactsIcon />

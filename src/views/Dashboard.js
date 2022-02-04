@@ -11,6 +11,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { Toast } from 'primereact/toast';
 import BackDropLoader from "../components/BackDrop";
 import { motion } from "framer-motion"
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 let skuColumns = [
     { title: 'Sku', field: 'sku' },
@@ -38,12 +39,10 @@ const useStyles = makeStyles({
         display: 'flex',
     },
     paper: {
-        backgroundColor: 'blue',
+        marginLeft: 10,
+        marginRight: 13,
     },
-    svg: {
-        width: 100,
-        height: 100,
-    },
+
 });
 
 
@@ -68,6 +67,7 @@ const Dashboard = () => {
 
     const [data, setData] = useState({ rows: [], columns: [], TableName: '' })
     const [skuList, setSkuList] = useState([]);
+    const [skuName, setSkuName] = useState("");
     const [PoupUpLookupOpen, setPoupUpLookupOpen] = useState(false);
 
     const classes = useStyles();
@@ -98,6 +98,7 @@ const Dashboard = () => {
     const setLookUpData = async (e, rowData) => {
         setPoupUpLookupOpen(false)
         setShowLoader(true)
+        setChecked(false);
         let payload = {
             sku: rowData.sku,
             ShopURL: sessionStorage.getItem("shop")
@@ -115,6 +116,9 @@ const Dashboard = () => {
                 totalWeeks: GetData.data.Message.FDF_Data[0]['TotalWeeks'].toFixed()
             }))
             setData(GetData.data.Message.Dashboard.rows)
+            setSkuName(rowData.sku)
+            // setChecked((prev) => !prev);
+            setChecked(true);
 
         }
         catch (e) {
@@ -131,35 +135,35 @@ const Dashboard = () => {
         </BackDropLoader>
 
         <div style={{ overflowX: 'hidden' }}>
-            <FormControlLabel
+            {/* <FormControlLabel
                 control={<Switch checked={checked} onChange={handleChange} />}
                 label="Show"
-            />
+            /> */}
 
-
-            {/* <div className={classes.container}> */}
-            <Collapse in={checked} style={{ paddingLeft: 12 }}>
-                <Card >Haris</Card>
-            </Collapse>
-            {/* </div> */}
-            {/* <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => null}
-                color="primary"
-            >
-                Launch
-            </motion.button> */}
-            <div className='p-grid'>
-                {/* <div className="p-col-12 p-md-12 p-lg-12" >
-                    <Collapse in={checked}>
+            <div className='p-grid' style={{ paddingTop: 20 }}>
+                <div className="p-col-12 p-md-12 p-lg-12" >
+                    <Collapse in={checked} timeout={1700}>
+                        {/* <Card style={{ backgroundColor: 'blue' }} className={classes.paper}></Card>  80V-HONEYMELLOW-6 */}
                         <Paper elevation={4} className={classes.paper}>
-                            <svg className={classes.svg}>
-                                <polygon points="0,100 50,00, 100,100" className={classes.polygon} />
-                            </svg>
+                            {/* <div className="p-grid ">
+                                <div className="p-col-12  p-md-6 p-lg-6">
+                                    <div className="p-grid">
+                                        <div className="p-col-1 p-md-1 p-lg-1">
+                                            <ErrorOutlineIcon style={{ color: "#61ab8e" }} />
+                                        </div> */}
+                            {/* <div className="p-col-11 p-md-11 p-lg-11"> */}
+                            <Typography variant="h5" align="center" style={{ paddingTop: 10, paddingBottom: 10 , }}>{`SKU : ${skuName}`} </Typography>
+                            {/* </div> */}
+
+                            {/* </div>
+
+                                </div>
+                            </div> */}
+
+
                         </Paper>
                     </Collapse>
-                </div> */}
+                </div>
                 <div className='p-col-12 p-md-9 p-lg-9'>
                     <ResponsiveContainer width="99%" height="50%" aspect={3}>
                         <ComposedChart
