@@ -31,7 +31,14 @@ let menuItems = [{
     menuItemIcon: <SettingsIcon />,
     path: "/setup"
 
+},
+{
+    menuItemName: "PRIVACY",
+    menuItemIcon: <LockIcon />,
+    path: ""
+
 }
+
 
 ]
 
@@ -50,6 +57,13 @@ const SideMenu = (props) => {
         if (e.target.outerText === "DASHBOARD") {
             props.setSkuIconTrue(true)
         }
+        else if (e.target.outerText === "PRIVACY") {
+            let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
+            window.open(
+                url,
+                "_blank",
+            );
+        }
 
         else {
             props.setSkuIconTrue(false)
@@ -60,14 +74,14 @@ const SideMenu = (props) => {
     }
 
 
-    const showPrivacyScreen = () => {
-        let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
-        window.open(
-            url,
-            "_blank",
-        );
+    // const showPrivacyScreen = () => {
+    //     let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
+    //     window.open(
+    //         url,
+    //         "_blank",
+    //     );
 
-    }
+    // }
 
     return (<>
 
@@ -103,11 +117,6 @@ const SideMenu = (props) => {
                             </>)
                         })
                     }
-                    <ListItem button onClick={(e) => showPrivacyScreen()}>
-                        <ListItemIcon style={{ color: "#61ab8e", paddingLeft: 7 }}>  <LockIcon /></ListItemIcon>
-                        <ListItemText primary={"PRIVACY"} />
-                    </ListItem>
-
                 </div>
             </div>
         </Drawer>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import constants from '../../src/utilities/constants';
 import BackDropLoader from "../components/BackDrop";
 import { Toast } from 'primereact/toast';
+import Register from "../components/Register";
 
 
 const Logs = () => {
@@ -44,55 +45,12 @@ const Logs = () => {
 
         </BackDropLoader>
         <Toast ref={toast} />
-        <MaterialTable
-            style={{
-                padding: '10px',
-                boxShadow: 'none'
-            }}
-            title=
-            {
-                <div className="table-button" >
-                    <span className="table-title" style={{ fontWeight: "bold", fontSize: "20px" }}>{tableData.TableName}</span>
 
-
-                </div>
-            }
-            isLoading={false}
+        <Register
             columns={tableData.columns}
-            data={tableData.rows}
-            localization={{
-                body: {
-                    emptyDataSourceMessage: 'No records to display',
-                    filterRow: {
-                        filterTooltip: 'Filter'
-                    }
-                }
-            }}
-            icons={{ Filter: () => <div /> }}
-            options={{
-                actionsColumnIndex: -1,
-                pageSize: 10,
-                pageSizeOptions: [5, 10, 20, 30],
-                search: true,
-                filtering: true,
-                headerStyle: {
-                    fontWeight: 'bold',
-                    paddingLeft: '10px',
-                    paddingRight: '0px',
-                    paddingTop: '5px',
-                    paddingBottom: '5px',
-                    textAlign: 'left'
-                },
-                rowStyle: x => {
-                    if (x.tableData.id % 2) {
-                        return { backgroundColor: "#f2f2f2", padding: "7px" }
-                    }
-                    else {
-                        return { padding: "7px" }
-                    }
-                }
-            }}
-        />
+            rows={tableData.rows}
+            TableName={tableData.TableName}
+        ></Register>
 
 
     </>)

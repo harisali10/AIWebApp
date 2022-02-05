@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         flexGrow: 1,
-        fontFamily:'Georgia'
+        fontFamily: 'Georgia'
     },
     drawer: {
         width: 210
@@ -42,6 +42,7 @@ const TopBar = () => {
     }
 
     const openSkuTable = () => {
+        // alert("haris")
         dispatch(setSku(true))
 
     }
@@ -52,7 +53,7 @@ const TopBar = () => {
 
     return (<>
         <div className={classes.root}>
-            <AppBar position="fixed"  style={{backgroundColor:"#61ab8e"}}>
+            <AppBar position="fixed" style={{ backgroundColor: "#61ab8e" }}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} onClick={() => setSideMenu(true)} color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -77,7 +78,11 @@ const TopBar = () => {
             </AppBar>
         </div>
 
-        <SideMenu sideMenu={sideMenu} drawerStyle={classes.drawer} setSideMenu={setSideMenu} setSkuIconTrue={setSkuIconTrue}>
+        <SideMenu
+            sideMenu={sideMenu}
+            drawerStyle={classes.drawer}
+            setSideMenu={setSideMenu}
+            setSkuIconTrue={setSkuIconTrue}>
 
         </SideMenu>
 

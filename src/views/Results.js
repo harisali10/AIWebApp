@@ -16,6 +16,7 @@ import { Toast } from 'primereact/toast';
 import queryString from 'query-string';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Slide from '@material-ui/core/Slide';
+import Register from '../components/Register'
 import { useTheme } from '@material-ui/core/styles';
 
 
@@ -48,7 +49,16 @@ const Results = () => {
         }
         getClientInfo();
         // fetchResults();
-        fetchSku();
+        // fetchSku();
+        return () => {
+            setTableData((prevState) =>
+            ({
+                ...prevState,
+                rows: [],
+                columns: [],
+                TableName: ""
+            }))
+        };
     }, [])
 
     async function fetchResults(clientId) {
@@ -70,13 +80,10 @@ const Results = () => {
                     columns: res.data.Message.columns,
                     TableName: "Stock Out Dashboard"
                 }))
-
                 // setShowMsg(false);
             }
             else {
                 setOpen(true);
-                // setShowDashboardText("We are working on your Data, Please be patient...") // Res set for DashBoards
-
             }
 
         }
@@ -114,7 +121,6 @@ const Results = () => {
     }
 
     async function getClientInfo() {
-        // setShowLoader(true)
         try {
             const res = await axios.post(`${constant.url}GetClientInfo`, {
                 Header: {
@@ -126,11 +132,7 @@ const Results = () => {
             // setClientId(res.data.Message.clientID)
             perfoamShopfiyOperations()
             fetchResults(res.data.Message.clientID);
-
-
             // getShopifyData(res.data.Message.accessToken)
-
-
         }
         catch (e) {
             toast.current.show({
@@ -140,7 +142,7 @@ const Results = () => {
                 life: 3000
             });
         }
-        // setShowLoader(false)
+
     }
 
     async function perfoamShopfiyOperations() {
@@ -207,11 +209,6 @@ const Results = () => {
 
     }
 
-    window.addEventListener("beforeunload", (ev) => {
-        ev.preventDefault();
-        return ev.returnValue = 'Are you sure you want to close?';
-    });
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -219,10 +216,8 @@ const Results = () => {
 
     return (<>
 
-
         <BackDropLoader backDrop={showLoader}>
         </BackDropLoader>
-
 
         <Dialog
             fullScreen={fullScreen}
@@ -273,58 +268,14 @@ const Results = () => {
             </DialogActions>
         </Dialog>
 
-
         <Toast ref={toast} />
-        <MaterialTable
-            style={{
-                padding: '10px',
-                boxShadow: 'none'
-            }}
-            title=
-            {
-                <div className="table-button" >
-                    <span className="table-title" style={{ fontWeight: "bold", fontSize: "20px" }}>{tableData.TableName}</span>
 
-
-                </div>
-            }
-            isLoading={false}
+        <Register
             columns={tableData.columns}
-            data={tableData.rows}
-            localization={{
-                body: {
-                    emptyDataSourceMessage: 'No records to display',
-                    filterRow: {
-                        filterTooltip: 'Filter'
-                    }
-                }
-            }}
-            icons={{ Filter: () => <div /> }}
-            options={{
-                actionsColumnIndex: -1,
-                pageSize: 10,
-                pageSizeOptions: [5, 10, 20, 30],
-                search: true,
-                filtering: true,
-                headerStyle: {
-                    fontWeight: 'bold',
-                    paddingLeft: '10px',
-                    paddingRight: '0px',
-                    paddingTop: '5px',
-                    paddingBottom: '5px',
-                    textAlign: 'left'
-                },
-                rowStyle: x => {
-                    if (x.tableData.id % 2) {
-                        return { backgroundColor: "#f2f2f2", padding: "7px" }
-                    }
-                    else {
-                        return { padding: "7px" }
-                    }
-                }
-            }}
-        />
-
+            rows={tableData.rows}
+            TableName={tableData.TableName}
+        ></Register>
+     
     </>)
 }
 
