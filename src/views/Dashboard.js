@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Line, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from 'recharts';
-import { Divider, Typography, Card, CardActions, CardContent, Button, Paper, FormControlLabel, Switch } from '@material-ui/core';
+import { Divider, Card, CardActions, CardContent, Button, Paper, FormControlLabel, Switch } from '@material-ui/core';
 import PopupLookup from '../PopUpLookUp';
+import { Dialog, DialogContent, IconButton, Typography } from '@material-ui/core'
+import PropTypes from 'prop-types';
+import CloseIcon from '@material-ui/icons/Close';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import constants from '../utilities/constants';
@@ -12,11 +17,17 @@ import { Toast } from 'primereact/toast';
 import BackDropLoader from "../components/BackDrop";
 import { motion } from "framer-motion"
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import Slide from '@material-ui/core/Slide';
+import MaterialTable from 'material-table';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
 
 let skuColumns = [
-    { title: 'Sku', field: 'sku' },
-    { title: 'Brand', field: 'brand' },
-    { title: 'Product Type', field: 'product_type' }
 
 ];
 
@@ -41,15 +52,16 @@ const useStyles = makeStyles({
     paper: {
         marginLeft: 10,
         marginRight: 13,
+        backgroundColor:'#61ab8e'
     },
 
 });
 
-
+const constant = constants.getConstant();
 
 const Dashboard = () => {
 
-    const constant = constants.getConstant();
+
     const dispatch = useDispatch();
     const toast = React.useRef(null);
     const [showLoader, setShowLoader] = useState(false)
@@ -135,31 +147,17 @@ const Dashboard = () => {
         </BackDropLoader>
 
         <div style={{ overflowX: 'hidden' }}>
-            {/* <FormControlLabel
-                control={<Switch checked={checked} onChange={handleChange} />}
-                label="Show"
-            /> */}
 
             <div className='p-grid' style={{ paddingTop: 20 }}>
                 <div className="p-col-12 p-md-12 p-lg-12" >
                     <Collapse in={checked} timeout={1700}>
-                        {/* <Card style={{ backgroundColor: 'blue' }} className={classes.paper}></Card>  80V-HONEYMELLOW-6 */}
                         <Paper elevation={4} className={classes.paper}>
-                            {/* <div className="p-grid ">
-                                <div className="p-col-12  p-md-6 p-lg-6">
-                                    <div className="p-grid">
-                                        <div className="p-col-1 p-md-1 p-lg-1">
-                                            <ErrorOutlineIcon style={{ color: "#61ab8e" }} />
-                                        </div> */}
-                            {/* <div className="p-col-11 p-md-11 p-lg-11"> */}
-                            <Typography variant="h5" align="center" style={{ paddingTop: 10, paddingBottom: 10 , }}>{`SKU : ${skuName}`} </Typography>
-                            {/* </div> */}
-
-                            {/* </div>
-
-                                </div>
-                            </div> */}
-
+                            <Typography
+                                variant="h5"
+                                align="center"
+                                style={{ paddingTop: 10, paddingBottom: 10,color:'white', fontFamily:'Georgia' }}>
+                                {`SKU : ${skuName}`}
+                            </Typography>
 
                         </Paper>
                     </Collapse>
@@ -293,10 +291,67 @@ const Dashboard = () => {
 
             </div>
 
-            <PopupLookup
+
+            <Dialog
+                fullWidth={true}
+                maxWidth={"lg"}
+                TransitionComponent={Transition}
+                onClose={() => { setPoupUpLookupOpen(false) }}
+                aria-labelledby="customized-dialog-title" open={PoupUpLookupOpen}>
+                <MuiDialogTitle disableTypography style={{ paddingBottom: '0px !important' }}>
+                    <Typography variant="h6">{"SKU"}</Typography>
+                    <IconButton style={{ position: 'absolute', right: '5px', top: '10px' }} aria-label="close" onClick={() => { setPoupUpLookupOpen(false) }}>
+                        <CloseIcon />
+                    </IconButton>
+                </MuiDialogTitle>
+                <DialogContent style={{ paddingTop: '0px !important' }}>
+                    <MaterialTable
+                        style={{
+                            border: 'none',
+                            boxShadow: 'none'
+                        }}
+                        icons={{ Filter: () => <div /> }}
+                        columns={[
+                            { title: 'Sku', field: 'sku' },
+                            { title: 'Brand', field: 'brand' },
+                            { title: 'Product Type', field: 'product_type' }
+
+                        ]}
+                        data={skuList
+                        }
+                        options={{
+                            showTitle: false,
+                            search: false,
+                            filtering: true,
+                            sorting: false,
+                            rowStyle: x => {
+                                if (x.tableData.id % 2) {
+                                    return { backgroundColor: "#f2f2f2", padding: "7px" }
+                                }
+                                else {
+                                    return { padding: "7px" }
+                                }
+                            },
+                            headerStyle: {
+                                fontWeight: "bolder",
+                                fontStyle: 'italic'
+                            },
+                        }}
+                        onRowClick={(e, x) => setLookUpData(e, x)}
+
+                    />
+
+
+                </DialogContent>
+
+
+            </Dialog>
+
+
+            {/* <PopupLookup
                 large={true} LookUpHeading={"SKU"}
                 LookUpClose={() => setPoupUpLookupOpen(false)} setLookUpData={(e, rowData) => setLookUpData(e, rowData)}
-                LookUpOpen={PoupUpLookupOpen} LookupList={{ columns: skuColumns, rows: skuList }} />
+                LookUpOpen={PoupUpLookupOpen} LookupList={{ columns: skuColumns, rows: skuList }} /> */}
         </div>
 
     </>)

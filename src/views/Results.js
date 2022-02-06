@@ -49,7 +49,7 @@ const Results = () => {
         }
         getClientInfo();
         // fetchResults();
-        // fetchSku();
+        fetchSku();
         return () => {
             setTableData((prevState) =>
             ({
