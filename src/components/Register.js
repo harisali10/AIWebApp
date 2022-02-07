@@ -42,6 +42,7 @@ export default function Register(props) {
                     paddingBottom: '5px',
                     textAlign: 'left'
                 },
+
                 rowStyle: x => {
                     if (x.tableData.id % 2) {
                         return { backgroundColor: "#f2f2f2", padding: "7px" }

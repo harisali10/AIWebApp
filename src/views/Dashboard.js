@@ -299,7 +299,7 @@ const Dashboard = () => {
                 onClose={() => { setPoupUpLookupOpen(false) }}
                 aria-labelledby="customized-dialog-title" open={PoupUpLookupOpen}>
                 <MuiDialogTitle disableTypography style={{ paddingBottom: '0px !important' }}>
-                    <Typography variant="h6">{"SKU"}</Typography>
+                    <Typography variant="h6">{"Please Select Your SKU"}</Typography>
                     <IconButton style={{ position: 'absolute', right: '5px', top: '10px' }} aria-label="close" onClick={() => { setPoupUpLookupOpen(false) }}>
                         <CloseIcon />
                     </IconButton>
