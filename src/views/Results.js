@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 import { Toast } from 'primereact/toast';
 import queryString from 'query-string';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -26,9 +27,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+
 const Results = () => {
 
     const [tableData, setTableData] = useState({ rows: [], columns: [], TableName: '' })
+    const [processDate, setProcessDate] = useState(new Date())
     const [customers, setCustomers] = useState([])
     const [orders, setOrders] = useState([])
     // const [clientId, setClientId] = useState()
@@ -38,6 +42,12 @@ const Results = () => {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    // CountDownTimer
+    const [days, setDays] = useState(0)
+    const [hours, setHours] = useState(0)
+    const [mins, setMins] = useState(0)
+    const [seconds, setSeconds] = useState(0)
+
 
     const dispatch = useDispatch();
 
@@ -61,6 +71,10 @@ const Results = () => {
         };
     }, [])
 
+
+
+
+
     async function fetchResults(clientId) {
         setShowLoader(true)
         try {
@@ -82,8 +96,30 @@ const Results = () => {
                 }))
                 // setShowMsg(false);
             }
+
             else {
+
+                let RequestDateTime = res.data.Message.timerResponse.RequestDateTime
+                var x = setInterval(async function () {
+                    console.log({ RequestDateTime })
+
+                    let currentDate = new Date()
+                    var diff = (currentDate.getTime() - new Date(RequestDateTime).getTime()) / 1000;
+
+                    let totalMins = diff /= 60;
+                    console.log({ totalMins })
+                    let hours = totalMins / 60
+                    let mins = totalMins % 60
+                    setHours(Math.floor(48 - hours))
+                    setMins(Math.floor(60 - mins))
+                    // setSeconds(Math.floor(totalSec));
+                    // let distance = new Date(RequestDateTime).getTime() - new Date().getTime();
+                    // setHours(Math.floor((hours % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+                    // setMins(Math.floor((mins % (1000 * 60 * 60)) / (1000 * 60)));
+                    // setSeconds(Math.floor((diff % (1000 * 60)) / 1000));
+                }, 1000);
                 setOpen(true);
+
             }
 
         }
@@ -214,6 +250,7 @@ const Results = () => {
     };
 
 
+
     return (<>
 
         <BackDropLoader backDrop={showLoader}>
@@ -230,11 +267,17 @@ const Results = () => {
                 <Typography variant="h5" align="center" style={{ color: '#61ab8e', fontFamily: 'Georgia' }} >
                     Welcome to Plan AI
                 </Typography>
+
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
+                    <Container style={{ fontStyle: 'italic', borderRadius: 25, border: '2px solid #61ab8e', width: 400, height: 50 }}>
+                        <Typography variant="subtitle1" align="center" style={{ fontStyle: 'italic', paddingTop: 10, color: '#61ab8e' }}>
+                            {`Hours :${hours} Minutes :${mins}`}
+                        </Typography>
+                    </Container>
                     <Typography variant="subtitle1" style={{ fontStyle: 'italic' }} >
-                        Plan AI is currently working on pulling your Sales and Product data from shopify auotmatically.
+                        Plan AI is currently working on syncing your Sales and Product data from shopify.
                         However for the app to function properly PLAN AI needs your historical Purchase order and historical inventory data.
                     </Typography>
                     {/* </DialogContentText> */}
@@ -253,10 +296,10 @@ const Results = () => {
                     <Typography variant="subtitle1" align="center" style={{ color: '#61ab8e', fontStyle: 'italic' }}  >
                         And You are Done!
                     </Typography>
-
                     <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
-                        If you have followed the steps above, please be patient your results will be displayed soon.
+                        If you have followed the steps above, please be patient your results are being processed. Keep an eye on the timer for an approximte completion time.
                     </Typography>
+
                 </DialogContentText>
 
             </DialogContent>
@@ -275,7 +318,7 @@ const Results = () => {
             rows={tableData.rows}
             TableName={tableData.TableName}
         ></Register>
-     
+
     </>)
 }
 

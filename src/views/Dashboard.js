@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Line, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart } from 'recharts';
 import { Divider, Card, CardActions, CardContent, Button, Paper, FormControlLabel, Switch } from '@material-ui/core';
 import PopupLookup from '../PopUpLookUp';
-import { Dialog, DialogContent, IconButton, Typography } from '@material-ui/core'
+import { Dialog, DialogContent, IconButton, Typography, TextField  ,DialogActions } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
     paper: {
         marginLeft: 10,
         marginRight: 13,
-        backgroundColor:'#61ab8e'
+        backgroundColor: '#61ab8e'
     },
 
 });
@@ -155,7 +155,7 @@ const Dashboard = () => {
                             <Typography
                                 variant="h5"
                                 align="center"
-                                style={{ paddingTop: 10, paddingBottom: 10,color:'white', fontFamily:'Georgia' }}>
+                                style={{ paddingTop: 10, paddingBottom: 10, color: 'white', fontFamily: 'Georgia' }}>
                                 {`SKU : ${skuName}`}
                             </Typography>
 
@@ -294,7 +294,7 @@ const Dashboard = () => {
 
             <Dialog
                 fullWidth={true}
-                maxWidth={"lg"}
+                maxWidth={"sm"}
                 TransitionComponent={Transition}
                 onClose={() => { setPoupUpLookupOpen(false) }}
                 aria-labelledby="customized-dialog-title" open={PoupUpLookupOpen}>
@@ -304,46 +304,36 @@ const Dashboard = () => {
                         <CloseIcon />
                     </IconButton>
                 </MuiDialogTitle>
-                <DialogContent style={{ paddingTop: '0px !important' }}>
-                    <MaterialTable
-                        style={{
-                            border: 'none',
-                            boxShadow: 'none'
-                        }}
-                        icons={{ Filter: () => <div /> }}
-                        columns={[
-                            { title: 'Sku', field: 'sku' },
-                            { title: 'Brand', field: 'brand' },
-                            { title: 'Product Type', field: 'product_type' }
-
-                        ]}
-                        data={skuList
-                        }
-                        options={{
-                            showTitle: false,
-                            search: false,
-                            filtering: true,
-                            sorting: false,
-                            rowStyle: x => {
-                                if (x.tableData.id % 2) {
-                                    return { backgroundColor: "#f2f2f2", padding: "7px" }
-                                }
-                                else {
-                                    return { padding: "7px" }
-                                }
-                            },
-                            headerStyle: {
-                                fontWeight: "bolder",
-                                fontStyle: 'italic'
-                            },
-                        }}
-                        onRowClick={(e, x) => setLookUpData(e, x)}
-
-                    />
-
-
-                </DialogContent>
-
+                {/* <DialogContent style={{ paddingTop: '0px !important' }}> */}
+                    <DialogContent style={{ paddingTop: '0px !important' }}>
+                        <div className="p-grid">
+                            <div className="p-col-12 p-lg-12">
+                                <div className="p-grid">
+                                    <div className="p-col-6 p-lg-6">
+                                        <Typography variant="h6">{"Price"}</Typography>
+                                    </div>
+                                    <div className="p-col-6 p-lg-6">
+                                        <Typography variant="h6">{"Remarks"}</Typography>
+                                    </div>
+                                </div>
+                                <div className="p-grid">
+                                    <div className="p-col-6 p-lg-6">
+                                    <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+                                        {/* <Typography variant="h6">{"Price"}</Typography> */}
+                                    </div>
+                                    <div className="p-col-6 p-lg-6">
+                                    <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+                                        {/* <Typography variant="h6">{"Remarks"}</Typography> */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </DialogContent>
+                  
+                {/* </DialogContent> */}
+                <DialogActions>
+                    <Button variant="outlined">Update</Button>
+                </DialogActions>
 
             </Dialog>
 

@@ -11,7 +11,7 @@ export default function Register(props) {
             title=
             {
                 <div className="table-button" >
-                    <span className="table-title" style={{ fontWeight: "bold", fontSize: "20px" }}>{props.TableName}</span>
+                    <span className="table-title" style={{ fontWeight: "bold", fontSize: "20px" ,color:'#61ab8e' }}>{props.TableName}</span>
 
 
                 </div>
