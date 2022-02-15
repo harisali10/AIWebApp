@@ -297,7 +297,7 @@ const Results = () => {
                         And You are Done!
                     </Typography>
                     <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
-                        If you have followed the steps above, please be patient your results are being processed. Keep an eye on the timer for an approximte completion time.
+                        If you have followed the steps above, please be patient your results are being processed. Keep an eye on the timer for an approximate completion time.
                     </Typography>
 
                 </DialogContentText>
