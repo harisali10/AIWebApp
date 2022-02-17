@@ -303,7 +303,7 @@ const Setups = (props) => {
                     else {
                         setLoading(false);
                         setNewData(true);
-                        toast.current.show({ severity: 'info', summary: 'No Source Setup found!', detail: "Please Create Source Setup to show records.", life: 3000 });
+                        // toast.current.show({ severity: 'info', summary: 'No Source Setup found!', detail: "Please Create Source Setup to show records.", life: 3000 });
                     }
                 }
                 else {

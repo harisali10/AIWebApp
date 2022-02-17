@@ -85,7 +85,7 @@ const Results = () => {
                     ShopURL: sessionStorage.getItem("shop")
                 }
             })
-            if (res.data.Message.rows.length != 0) {
+            if (res.data.Message.rows.length != 0 || Object.keys(res.data.Message).length != 0) {
 
                 setTableData((prevState) =>
                 ({
@@ -101,8 +101,6 @@ const Results = () => {
 
                 let RequestDateTime = res.data.Message.timerResponse.RequestDateTime
                 var x = setInterval(async function () {
-                    console.log({ RequestDateTime })
-
                     let currentDate = new Date()
                     var diff = (currentDate.getTime() - new Date(RequestDateTime).getTime()) / 1000;
 
@@ -124,12 +122,12 @@ const Results = () => {
 
         }
         catch (e) {
-            toast.current.show({
-                severity: 'info',
-                summary: 'No Source Setup found!',
-                detail: "Please Create Source Setup to show records.",
-                life: 3000
-            });
+            // toast.current.show({
+            //     severity: 'error',
+            //     summary: 'No Source Setup found!',
+            //     detail: "Please Create Source Setup to show records.",
+            //     life: 3000
+            // });
         }
         setShowLoader(false)
 

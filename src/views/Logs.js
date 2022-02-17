@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Logs = () => {
     const constant = constants.getConstant();
     const [tableData, setTableData] = useState({ rows: [], columns: [], TableName: '' })
-    // const [showLoader, setShowLoader] = useState(false)
+    const [showLoader, setShowLoader] = useState(false)
     // const toast = React.useRef(null);
 
 
