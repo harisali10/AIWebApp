@@ -85,7 +85,29 @@ const Results = () => {
                     ShopURL: sessionStorage.getItem("shop")
                 }
             })
-            if (res.data.Message.rows.length != 0 || Object.keys(res.data.Message).length != 0) {
+            if (res.data.Message.rows === undefined) {
+                console.log("haris")
+                if (!res.data.Message.hasOwnProperty('timerResponse')) {
+                    var RequestDateTime = new Date()
+                }
+                else {
+                    var RequestDateTime = res.data.Message.timerResponse.RequestDateTime
+                }
+                var x = setInterval(async function () {
+                    let currentDate = new Date()
+                    var diff = (currentDate.getTime() - new Date(RequestDateTime).getTime()) / 1000;
+
+                    let totalMins = diff /= 60;
+                    console.log({ totalMins })
+                    let hours = totalMins / 60
+                    let mins = totalMins % 60
+                    setHours(Math.floor(48 - hours))
+                    setMins(Math.floor(60 - mins))
+                }, 1000);
+                setOpen(true);
+            }
+
+            else if (res.data.Message.rows.length != 0) {
 
                 setTableData((prevState) =>
                 ({
@@ -97,28 +119,7 @@ const Results = () => {
                 // setShowMsg(false);
             }
 
-            else {
-
-                let RequestDateTime = res.data.Message.timerResponse.RequestDateTime
-                var x = setInterval(async function () {
-                    let currentDate = new Date()
-                    var diff = (currentDate.getTime() - new Date(RequestDateTime).getTime()) / 1000;
-
-                    let totalMins = diff /= 60;
-                    console.log({ totalMins })
-                    let hours = totalMins / 60
-                    let mins = totalMins % 60
-                    setHours(Math.floor(48 - hours))
-                    setMins(Math.floor(60 - mins))
-                    // setSeconds(Math.floor(totalSec));
-                    // let distance = new Date(RequestDateTime).getTime() - new Date().getTime();
-                    // setHours(Math.floor((hours % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-                    // setMins(Math.floor((mins % (1000 * 60 * 60)) / (1000 * 60)));
-                    // setSeconds(Math.floor((diff % (1000 * 60)) / 1000));
-                }, 1000);
-                setOpen(true);
-
-            }
+            // }
 
         }
         catch (e) {
