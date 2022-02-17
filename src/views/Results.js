@@ -85,7 +85,7 @@ const Results = () => {
                     ShopURL: sessionStorage.getItem("shop")
                 }
             })
-            if (res.data.Message.rows === undefined) {
+            if (res.data.Message.rows === undefined || res.data.Message.rows.length === 0) {
                 console.log("haris")
                 if (!res.data.Message.hasOwnProperty('timerResponse')) {
                     var RequestDateTime = new Date()
