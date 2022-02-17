@@ -164,16 +164,15 @@ const Results = () => {
                 }
             })
             console.log("accessToken", res.data.Message.accessToken)
-            // setClientId(res.data.Message.clientID)
+            sessionStorage.setItem('clientId', res.data.Message.clientID);
             perfoamShopfiyOperations()
             fetchResults(res.data.Message.clientID);
-            // getShopifyData(res.data.Message.accessToken)
         }
         catch (e) {
             toast.current.show({
-                severity: 'info',
-                summary: 'No Source Setup found!',
-                detail: "Please Create Source Setup to show records.",
+                severity: 'error',
+                summary: 'No Client Found',
+                detail: "No Client Found Against given Shop Url",
                 life: 3000
             });
         }

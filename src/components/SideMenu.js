@@ -38,10 +38,7 @@ let menuItems = [{
     path: ""
 
 }
-
-
 ]
-
 
 const SideMenu = (props) => {
 
@@ -63,6 +60,7 @@ const SideMenu = (props) => {
                 url,
                 "_blank",
             );
+            props.setSkuIconTrue(false)
         }
 
         else {
@@ -72,16 +70,6 @@ const SideMenu = (props) => {
 
         props.setSideMenu(false)
     }
-
-
-    // const showPrivacyScreen = () => {
-    //     let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
-    //     window.open(
-    //         url,
-    //         "_blank",
-    //     );
-
-    // }
 
     return (<>
 
@@ -110,8 +98,6 @@ const SideMenu = (props) => {
                                             <ListItemIcon style={{ color: "#61ab8e" }}> {item.menuItemIcon} </ListItemIcon>
                                             <ListItemText primary={item.menuItemName} />
                                         </ListItem>
-
-
                                     </List>
                                 </div>
                             </>)

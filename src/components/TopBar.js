@@ -38,6 +38,7 @@ const TopBar = () => {
     const dispatch = useDispatch();
 
     const setSkuIconTrue = (state) => {
+        console.log({ state })
         setShowSkuIcon(state)
     }
 
@@ -68,12 +69,16 @@ const TopBar = () => {
                         </Tooltip>
 
                     </Button>
-                    {showSkuIcon && <Button color="inherit" onClick={openSkuTable}>
-                        <Tooltip title="Select SKU">
-                            <TouchAppIcon />
-                        </Tooltip>
-                        SKU
-                    </Button>}
+                    {
+                        showSkuIcon === true ? <Button color="inherit" onClick={openSkuTable}>
+                            <Tooltip title="Select SKU">
+                                <TouchAppIcon />
+                            </Tooltip>
+                            SKU
+                        </Button> : null
+                    }
+                    {/* {showSkuIcon && 
+                    } */}
                 </Toolbar>
             </AppBar>
         </div>

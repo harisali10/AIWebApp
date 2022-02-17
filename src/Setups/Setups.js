@@ -619,7 +619,8 @@ const Setups = (props) => {
                     SetupName: setupInitials.SetupName,
                     SourceType: setupInitials.SourceType.code,
                     SourceConfiguration: Configuration,
-                    ClientID: 21,
+                    // ClientID: 21,
+                    ClientID: sessionStorage.getItem("clientId"),
                     ShopURL: sessionStorage.getItem("shop"),
                     Type: 'CreateSetupSource'
                 }
@@ -847,13 +848,13 @@ const Setups = (props) => {
     return (
         <div style={{ marginLeft: 32, marginTop: 30 }}>
             <div>
-               
+
                 {/* <h3 style={{ alignContent: 'center' }}>Setup</h3> */}
             </div>
             <Toast ref={toast} />
             {
                 loading === true ?
-                    <BackDropLoader  backDrop={loading} >
+                    <BackDropLoader backDrop={loading} >
                     </BackDropLoader>
                     // <div style={{ position: 'fixed', top: '50%', bottom: '50%', left: '50%', right: '50%', zIndex: 5000, }}>
                     //     <Spinner />
@@ -892,7 +893,7 @@ const Setups = (props) => {
                                 <div className="p-grid">
                                     <div className="p-col-3 p-md-3 p-lg-3">
                                         {/* <div className='p-col-12 p-md-1' style={{ marginLeft: 42 }}> */}
-                                        <Button onClick={createStockSetup} style={{ width: 200 }} variant="contained" color="primary">Set up source</Button>
+                                        <Button onClick={createStockSetup} style={{ width: 200, backgroundColor: '#61ab8e', color: 'white' }} variant="contained" >Set up source</Button>
                                         {/* </div> */}
                                     </div>
                                 </div>
