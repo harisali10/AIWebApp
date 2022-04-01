@@ -8,6 +8,7 @@ import Register from "../components/Register";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+let shpName = "stores/n9xqzkpx1"
 
 const Logs = () => {
     const constant = constants.getConstant();
@@ -73,13 +74,15 @@ const Logs = () => {
         setShowLoader(true)
         // notify()
         try {
-            const logsRes = await axios.post(`${constant.url}GetPredictionResults`, {
-                Header: {
-                    Type: 'Log',
+            const logsRes = await axios.post(`${constant.url}GetPredictionResults?Type=${'Log'}&shop=${shpName}`
+            // , {
+            //     Header: {
+            //         Type: 'Log',
 
-                    ShopURL: sessionStorage.getItem("shop")
-                }
-            })
+            //         ShopURL: sessionStorage.getItem("shop")
+            //     }
+            // }
+            )
             setTableData((prevState) =>
                 ({ ...prevState, rows: logsRes.data.Message.rows, columns: logsRes.data.Message.columns, TableName: "Logs" }))
         }

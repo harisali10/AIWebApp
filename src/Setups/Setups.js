@@ -14,6 +14,9 @@ import { Grid, Select, FormControl, InputLabel, MenuItem, FormHelperText, TextFi
 import BackDropLoader from "../components/BackDrop";
 
 
+let shopName = "stores/n9xqzkpx1"
+
+
 const constant = constants.getConstant();
 
 const useStyles = makeStyles((theme) => ({
@@ -279,15 +282,20 @@ const Setups = (props) => {
 
     useEffect(() => {
         setLoading(true);
-        axios.post(`${constant.url}GetStockSetupSource`, { Header: { ShopURL: sessionStorage.getItem("shop") } })
+        axios.get(`${constant.url}StockSetupSource?shop=${shopName}`
+            // {
+            //     Header: { ShopURL: sessionStorage.getItem("shop") }
+            // }
+            )
             .then(function (response) {
                 if (response.data.Success === true) {
                     if (response.data.Message !== null) {
                         setNewData(false);
                         setLoading(false);
                         let data = response.data.Message;
-                        setSetupInitials((prev) => ({ ...prev, SetupName: data.SetupName, SourceType: { name: data.SourceType, code: data.SourceType }, SetupNameValidity: true, SourceTypeValidity: true }))
-                        let configuationdata = JSON.parse(data.SourceConfiguration);
+                        console.log({data})
+                        setSetupInitials((prev) => ({ ...prev, SetupName: data.setup_name, SourceType: { name: data.source_type, code: data.source_type }, SetupNameValidity: true, SourceTypeValidity: true }))
+                        let configuationdata = JSON.parse(data.src_config);
                         let keys = Object.keys(configuationdata).filter((item) => item.includes("date") === true);
 
                         for (let i in configuationdata) {
@@ -621,12 +629,12 @@ const Setups = (props) => {
                     SourceConfiguration: Configuration,
                     // ClientID: 21,
                     ClientID: sessionStorage.getItem("clientId"),
-                    ShopURL: sessionStorage.getItem("shop"),
+                    // ShopURL: sessionStorage.getItem("shop"),
                     Type: 'CreateSetupSource'
                 }
 
                 if (newData === true) {
-                    axios.post(`${constant.url}CreateStockSetupSource`, { Header })
+                    axios.post(`${constant.url}StockSetupSource?shop=${shopName}`, { Header })
                         .then(function (response) {
                             if (response.data.Success === true) {
                                 toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Setup Source Created!', life: 3000 });
@@ -642,19 +650,19 @@ const Setups = (props) => {
                         });
                 }
                 else {
-                    axios.post(`${constant.url}UpdateStockSetupSource`, { Header })
-                        .then(function (response) {
-                            if (response.data.Success === true) {
-                                toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Setup Source Updated!', life: 3000 });
-                                // clearPage();
-                            }
-                            else {
-                                toast.current.show({ severity: 'error', summary: 'Error Message', detail: response.data.Message, life: 3000 });
-                            }
-                        })
-                        .catch(function (error) {
-                            toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
-                        });
+                    // axios.post(`${constant.url}StockSetupSource`, { Header }) // update not using
+                    //     .then(function (response) {
+                    //         if (response.data.Success === true) {
+                    //             toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Setup Source Updated!', life: 3000 });
+                    //             // clearPage();
+                    //         }
+                    //         else {
+                    //             toast.current.show({ severity: 'error', summary: 'Error Message', detail: response.data.Message, life: 3000 });
+                    //         }
+                    //     })
+                    //     .catch(function (error) {
+                    //         toast.current.show({ severity: 'error', summary: 'Error Message', detail: error.message, life: 3000 });
+                    //     });
                 }
 
             }

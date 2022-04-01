@@ -27,7 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
+let shpName = "stores/n9xqzkpx1"
 
 const Results = () => {
 
@@ -54,11 +54,13 @@ const Results = () => {
     useEffect(() => {
         let params = queryString.parse(window.location.search)
         console.log({ params })
-        if (params.shop != undefined || params.shop != null || Object.keys(params).length != 0) {
-            sessionStorage.setItem('shop', params.shop);
+        // params != undefined || params != null || 
+        if (Object.keys(params).length != 0) {
+            sessionStorage.setItem('shop', params);
         }
         getClientInfo();
-        // fetchResults();
+        perfoamShopfiyOperations()
+        fetchResults();
         fetchSku();
         return () => {
             setTableData((prevState) =>
@@ -78,13 +80,15 @@ const Results = () => {
     async function fetchResults(clientId) {
         setShowLoader(true)
         try {
-            const res = await axios.post(`${constant.url}GetPredictionResults`, {
-                Header: {
-                    ClientID: clientId,
-                    Type: 'Result',
-                    ShopURL: sessionStorage.getItem("shop")
-                }
-            })
+            const res = await axios.post(`${constant.url}GetPredictionResults?shop=${shpName}`
+                // , {
+                //     Header: {
+                //         ClientID: clientId,
+                //         Type: 'Result',
+                //         ShopURL: sessionStorage.getItem("shop")
+                //     }
+                // }
+            )
             if (res.data.Message.rows === undefined || res.data.Message.rows.length === 0) {
                 console.log("haris")
                 if (!res.data.Message.hasOwnProperty('timerResponse')) {
@@ -137,11 +141,13 @@ const Results = () => {
     const fetchSku = async () => {
         // document.body.style.zoom = "80%";
         try {
-            let options = await axios.post(`${constant.url}lookup`, {
-                Header: {
-                    ShopURL: sessionStorage.getItem("shop")
-                }
-            })
+            let options = await axios.post(`${constant.url}lookup?shop=${shpName}`
+                // , {
+                // Header: {
+                //     ShopURL: sessionStorage.getItem("shop")
+                // }
+                // }
+            )
             dispatch(setSkuArray(options.data.Message))
         } catch (e) {
             toast.current.show({
@@ -159,13 +165,12 @@ const Results = () => {
         try {
             const res = await axios.post(`${constant.url}GetClientInfo`, {
                 Header: {
-                    Type: 'Result',
-                    ShopURL: sessionStorage.getItem("shop")
+                    body: sessionStorage.getItem('shop')
                 }
             })
             console.log("accessToken", res.data.Message.accessToken)
             sessionStorage.setItem('clientId', res.data.Message.clientID);
-            perfoamShopfiyOperations()
+            // perfoamShopfiyOperations()
             fetchResults(res.data.Message.clientID);
         }
         catch (e) {
@@ -180,11 +185,14 @@ const Results = () => {
     }
 
     async function perfoamShopfiyOperations() {
-        axios.post(`${constant.url}GetShopifyData`, {
-            Header: {
-                ShopURL: sessionStorage.getItem("shop")
-            }
-        })
+        axios.post(`${constant.url}GetShopifyData?shop=${shpName}`
+            // , 
+            // {
+            // Header: {
+            //     ShopURL: sessionStorage.getItem("shop")
+            // }
+            // }
+        )
             .then(function (response) {
             })
             .catch(function (error) {
@@ -194,54 +202,6 @@ const Results = () => {
     }
 
     // Still Unsed cant access shopify from front end 
-    async function getShopifyData(token) {
-        try {
-            let customerUrl = `https://${sessionStorage.getItem("shop")}/admin/api/2021-10/customers.json`;
-            let customers = await axios.get(customerUrl, { 'headers': { 'x-Shopify-Access-Token': token, 'Access-Control-Allow-Origin': "*", 'Access-Control-Allow-Credentials': "true", 'Access-Control-Allow-Headers': "content-type", "Access-Control-Max-Age": "1800", "Access-Control-Allow-Methods": "PUT, POST, GET, DELETE, PATCH, OPTIONS" } })
-            console.log({ customers })
-            setCustomers(customers)
-
-        }
-        catch (error) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Failed to get Customers',
-                detail: "Customers are not getting from shopify",
-                life: 3000
-            });
-        }
-        try {
-            let orderUrl = `http://${sessionStorage.getItem("shop")}/admin/api/2021-10/orders.json?status=any`;
-            let orders = await axios.get(orderUrl, { 'headers': { 'x-Shopify-Access-Token': token } })
-            console.log({ orders })
-            setOrders(orders)
-
-        }
-        catch (error) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Failed to get Orders',
-                detail: "Orders are not getting from shopify",
-                life: 3000
-            });
-        }
-        try {
-            let productUrl = `http://${sessionStorage.getItem("shop")}/admin/api/2021-10/products.json`;
-            let products = await axios.get(productUrl, { 'headers': { 'x-Shopify-Access-Token': token } })
-            console.log({ products })
-            setProducts(orders)
-
-        }
-        catch (error) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Failed to get Products',
-                detail: "Products are not getting from shopify",
-                life: 3000
-            });
-        }
-
-    }
 
     const handleClose = () => {
         setOpen(false);
