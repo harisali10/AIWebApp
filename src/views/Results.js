@@ -19,7 +19,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Slide from '@material-ui/core/Slide';
 import Register from '../components/Register'
 import { useTheme } from '@material-ui/core/styles';
-
+import WizardDialog from './WizardDialog';
+import MultiStep from 'react-multistep/dist/index'
 
 const constant = constants.getConstant();
 
@@ -27,7 +28,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-let shpName = "stores/n9xqzkpx1"
+// let shpName = "stores/n9xqzkpx1"
+
+
+
+let skues = [
+    'Arial', 'Ketchup', 'OppoA7'
+]
+
 
 const Results = () => {
 
@@ -35,7 +43,6 @@ const Results = () => {
     const [processDate, setProcessDate] = useState(new Date())
     const [customers, setCustomers] = useState([])
     const [orders, setOrders] = useState([])
-    // const [clientId, setClientId] = useState()
     const [products, setProducts] = useState([])
     const [showLoader, setShowLoader] = useState(false)
     const toast = React.useRef(null);
@@ -48,20 +55,16 @@ const Results = () => {
     const [mins, setMins] = useState(0)
     const [seconds, setSeconds] = useState(0)
 
-
     const dispatch = useDispatch();
 
     useEffect(() => {
         let params = queryString.parse(window.location.search)
-        console.log({ params })
-        // params != undefined || params != null || 
-        if (Object.keys(params).length != 0) {
-            sessionStorage.setItem('shop', params);
+        console.log({ loca: window.location })
+        if (params.signed_payload != undefined || params.signed_payload != null || Object.keys(params).length != 0) {
+            sessionStorage.setItem('signed_payload', params.signed_payload);
+            // sessionStorage.setItem('RequestDateTime', new Date())
         }
         getClientInfo();
-        perfoamShopfiyOperations()
-        fetchResults();
-        fetchSku();
         return () => {
             setTableData((prevState) =>
             ({
@@ -75,22 +78,35 @@ const Results = () => {
 
 
 
+    const cardTimer = () => {
+        console.log({ har: sessionStorage.getItem('RequestDateTime') })
+        if (sessionStorage.getItem('RequestDateTime') === null) { // sets curr datetime in session storage on first run.
+            var RequestDateTime = new Date()
+            sessionStorage.setItem('RequestDateTime', RequestDateTime)
+        }
+        else {
+            var RequestDateTime = sessionStorage.getItem('RequestDateTime')// gets datetime set in session storage in prev step.
+        }
+        var x = setInterval(async function () {
+            let currentDate = new Date()
+            var diff = (currentDate.getTime() - new Date(RequestDateTime).getTime()) / 1000;
 
+            let totalMins = diff /= 60;
+
+            let hours = totalMins / 60
+            let mins = totalMins % 60
+            setHours(Math.floor(48 - hours))
+            setMins(Math.floor(60 - mins))
+        }, 1000);
+        setOpen(true);
+    }
 
     async function fetchResults(clientId) {
         setShowLoader(true)
         try {
-            const res = await axios.post(`${constant.url}GetPredictionResults?shop=${shpName}`
-                // , {
-                //     Header: {
-                //         ClientID: clientId,
-                //         Type: 'Result',
-                //         ShopURL: sessionStorage.getItem("shop")
-                //     }
-                // }
+            const res = await axios.post(`${constant.url}GetPredictionResults?shop=${sessionStorage.getItem('shop')}`
             )
             if (res.data.Message.rows === undefined || res.data.Message.rows.length === 0) {
-                console.log("haris")
                 if (!res.data.Message.hasOwnProperty('timerResponse')) {
                     var RequestDateTime = new Date()
                 }
@@ -99,10 +115,10 @@ const Results = () => {
                 }
                 var x = setInterval(async function () {
                     let currentDate = new Date()
+
                     var diff = (currentDate.getTime() - new Date(RequestDateTime).getTime()) / 1000;
 
                     let totalMins = diff /= 60;
-                    console.log({ totalMins })
                     let hours = totalMins / 60
                     let mins = totalMins % 60
                     setHours(Math.floor(48 - hours))
@@ -141,7 +157,7 @@ const Results = () => {
     const fetchSku = async () => {
         // document.body.style.zoom = "80%";
         try {
-            let options = await axios.post(`${constant.url}lookup?shop=${shpName}`
+            let options = await axios.post(`${constant.url}lookup?shop=${sessionStorage.getItem('shop')}`
                 // , {
                 // Header: {
                 //     ShopURL: sessionStorage.getItem("shop")
@@ -165,13 +181,22 @@ const Results = () => {
         try {
             const res = await axios.post(`${constant.url}GetClientInfo`, {
                 Header: {
-                    body: sessionStorage.getItem('shop')
+                    body: sessionStorage.getItem('signed_payload') === undefined ? "" : sessionStorage.getItem('signed_payload')
                 }
             })
-            console.log("accessToken", res.data.Message.accessToken)
-            sessionStorage.setItem('clientId', res.data.Message.clientID);
-            // perfoamShopfiyOperations()
-            fetchResults(res.data.Message.clientID);
+            if (res.data.Success) {
+                sessionStorage.setItem('clientId', res.data.Message.clientID);
+                sessionStorage.setItem('shop', res.data.Message.shop);
+                sessionStorage.setItem('accessToken', res.data.Message.accessToken);
+                // perfoamShopfiyOperations()
+                fetchResults(res.data.Message.clientID);
+                perfoamBigCommerceOperations()
+                fetchSku();
+
+            }
+            else {
+                cardTimer()
+            }
         }
         catch (e) {
             toast.current.show({
@@ -184,15 +209,8 @@ const Results = () => {
 
     }
 
-    async function perfoamShopfiyOperations() {
-        axios.post(`${constant.url}GetShopifyData?shop=${shpName}`
-            // , 
-            // {
-            // Header: {
-            //     ShopURL: sessionStorage.getItem("shop")
-            // }
-            // }
-        )
+    async function perfoamBigCommerceOperations() {
+        axios.post(`${constant.url}GetShopifyData?shop=${sessionStorage.getItem('shop')}`)
             .then(function (response) {
             })
             .catch(function (error) {
@@ -269,13 +287,21 @@ const Results = () => {
             </DialogActions>
         </Dialog>
 
+        <WizardDialog
+            fullScreen={fullScreen}
+            open={open}
+            TransitionComponent={Transition}
+            onClose={handleClose}
+        >
+        </WizardDialog>
+
         <Toast ref={toast} />
 
-        <Register
+        {/* <Register
             columns={tableData.columns}
             rows={tableData.rows}
             TableName={tableData.TableName}
-        ></Register>
+        ></Register> */}
 
     </>)
 }

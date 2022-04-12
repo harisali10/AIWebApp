@@ -74,7 +74,7 @@ const Logs = () => {
         setShowLoader(true)
         // notify()
         try {
-            const logsRes = await axios.post(`${constant.url}GetPredictionResults?Type=${'Log'}&shop=${shpName}`
+            const logsRes = await axios.post(`${constant.url}GetPredictionResults?Type=${'Log'}&shop=${sessionStorage.getItem('shop')}`
             // , {
             //     Header: {
             //         Type: 'Log',

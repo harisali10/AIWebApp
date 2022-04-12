@@ -282,7 +282,7 @@ const Setups = (props) => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${constant.url}StockSetupSource?shop=${shopName}`
+        axios.get(`${constant.url}StockSetupSource?shop=${sessionStorage.getItem('shop')}`
             // {
             //     Header: { ShopURL: sessionStorage.getItem("shop") }
             // }
@@ -634,7 +634,7 @@ const Setups = (props) => {
                 }
 
                 if (newData === true) {
-                    axios.post(`${constant.url}StockSetupSource?shop=${shopName}`, { Header })
+                    axios.post(`${constant.url}StockSetupSource?shop=${sessionStorage.getItem('shop')}`, { Header })
                         .then(function (response) {
                             if (response.data.Success === true) {
                                 toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Setup Source Created!', life: 3000 });

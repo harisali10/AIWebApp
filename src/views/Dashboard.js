@@ -118,20 +118,23 @@ const Dashboard = () => {
         }
         try {
             let GetData = await axios.post(`${constant.url}GetData`, payload)
-            setFdfData((prevState) => ({
-                ...prevState,
-                averageSales: GetData.data.Message.FDF_Data[0]['AverageSales'].toFixed(),
-                projectedRevLoss: GetData.data.Message.FDF_Data[0]['ProjectedRevLoss'].toFixed(),
-                projectedSales: GetData.data.Message.FDF_Data[0]['ProjectedSales'].toFixed(),
-                reOrderQty: GetData.data.Message.FDF_Data[0]['ReOrderQty'].toFixed(),
-                totalRevenue: GetData.data.Message.FDF_Data[0]['TotalRevenue'].toFixed(),
-                totalSalesQty: GetData.data.Message.FDF_Data[0]['TotalSaleQty'].toFixed(),
-                totalWeeks: GetData.data.Message.FDF_Data[0]['TotalWeeks'].toFixed()
-            }))
-            setData(GetData.data.Message.Dashboard.rows)
-            setSkuName(rowData.sku)
-            // setChecked((prev) => !prev);
-            setChecked(true);
+            if(GetData.Success === true){
+                setFdfData((prevState) => ({
+                    ...prevState,
+                    averageSales: GetData.data.Message.FDF_Data[0]['AverageSales'].toFixed(),
+                    projectedRevLoss: GetData.data.Message.FDF_Data[0]['ProjectedRevLoss'].toFixed(),
+                    projectedSales: GetData.data.Message.FDF_Data[0]['ProjectedSales'].toFixed(),
+                    reOrderQty: GetData.data.Message.FDF_Data[0]['ReOrderQty'].toFixed(),
+                    totalRevenue: GetData.data.Message.FDF_Data[0]['TotalRevenue'].toFixed(),
+                    totalSalesQty: GetData.data.Message.FDF_Data[0]['TotalSaleQty'].toFixed(),
+                    totalWeeks: GetData.data.Message.FDF_Data[0]['TotalWeeks'].toFixed()
+                }))
+                setData(GetData.data.Message.Dashboard.rows)
+                setSkuName(rowData.sku)
+                // setChecked((prev) => !prev);
+                setChecked(true);
+            }
+      
 
         }
         catch (e) {
