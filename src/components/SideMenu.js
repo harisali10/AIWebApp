@@ -9,6 +9,7 @@ import Drawer from '@material-ui/core/Drawer';
 import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
 import LockIcon from '@material-ui/icons/Lock';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 
 
 let menuItems = [{
@@ -35,8 +36,12 @@ let menuItems = [{
 {
     menuItemName: "PRIVACY",
     menuItemIcon: <LockIcon />,
-    path: ""
-
+    path: "/privacy"
+},
+{
+    menuItemName: "UPGRADE PLAN",
+    menuItemIcon: <TrendingUpIcon fontSize="large" />,
+    path: "/upgradeplan"
 }
 ]
 
@@ -54,14 +59,14 @@ const SideMenu = (props) => {
         if (e.target.outerText === "DASHBOARD") {
             props.setSkuIconTrue(true)
         }
-        else if (e.target.outerText === "PRIVACY") {
-            let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
-            window.open(
-                url,
-                "_blank",
-            );
-            props.setSkuIconTrue(false)
-        }
+        // else if (e.target.outerText === "PRIVACY") {
+        //     let url = "https://drive.google.com/file/d/1BqsLUlr8VmuL4amehtx9GTbRJZ_6MYYd/view?usp=sharing"
+        //     window.open(
+        //         url,
+        //         "_blank",
+        //     );
+        //     props.setSkuIconTrue(false)
+        // }
 
         else {
             props.setSkuIconTrue(false)

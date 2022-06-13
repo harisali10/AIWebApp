@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         fontFamily: 'Georgia'
     },
     drawer: {
-        width: 210
+        width: 250
     }
 }));
 

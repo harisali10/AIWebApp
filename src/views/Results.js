@@ -43,6 +43,7 @@ const Results = () => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     // CountDownTimer
+    const [Email, setEmail] = useState('')
     const [days, setDays] = useState(0)
     const [hours, setHours] = useState(0)
     const [mins, setMins] = useState(0)
@@ -105,6 +106,7 @@ const Results = () => {
                     setMins(Math.floor(60 - mins))
                 }, 1000);
                 setOpen(true);
+                setEmail(res.data.Message.Email)
             }
 
             else if (res.data.Message.rows.length != 0) {
@@ -254,7 +256,7 @@ const Results = () => {
         <BackDropLoader backDrop={showLoader}>
         </BackDropLoader>
 
-        <Dialog
+        {/* <Dialog
             fullScreen={fullScreen}
             open={open}
             TransitionComponent={Transition}
@@ -278,7 +280,6 @@ const Results = () => {
                         Plan AI is currently working on syncing your Sales and Product data from shopify.
                         However for the app to function properly PLAN AI needs your historical Purchase order and historical inventory data.
                     </Typography>
-                    {/* </DialogContentText> */}
                     <Typography variant="subtitle1" align="center" style={{ color: '#61ab8e', fontStyle: 'italic', paddingTop: 7, paddingBottom: 7 }} >
                         Please follow the steps below to complete the setup process.
                     </Typography>
@@ -307,7 +308,48 @@ const Results = () => {
                     OK ,I got it
                 </Button>
             </DialogActions>
+        </Dialog> */}
+
+        <Dialog
+            fullScreen={fullScreen}
+            open={open}
+            TransitionComponent={Transition}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle>
+                <Typography variant="h5" align="center" style={{ color: '#61ab8e', fontFamily: 'Georgia' }} >
+                    Welcome to Plan AI
+                </Typography>
+
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+
+                    <Typography variant="subtitle1" style={{ fontStyle: 'normal' }} >
+                        You have installed the <b>Free</b> version of PLanAI. Plan AI is currently syncing your Sales and Product data from shopify and creating your sales analytics Visualisations.
+                    </Typography>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'normal', paddingTop: 7 }} >
+                        You will shortly <b>recieve an email</b> {`at  ${<u>Email</u>} containing the link and instructions to access you visualisations. Incase you do not recieve an email in the next 12 hours, kindly reach out to us using the contact us page.`}
+                    </Typography>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'normal', paddingTop: 7, paddingBottom: 7 }}  >
+                        Feel free to checkout the features PlanAI has to offer head over to the <b>upgrade plan</b> page using the side bar to upgrade your subscription plan to the paid version.
+                    </Typography>
+                    <Typography variant="subtitle1" style={{ fontStyle: 'normal' }}>
+                        For any queries or a personalised demo of PlanAI's capabilities, please contact us through the Contact us button in the top right corner of your page
+                    </Typography>
+
+                </DialogContentText>
+
+            </DialogContent>
+            <DialogActions>
+
+                <Button onClick={handleClose} color="primary" autoFocus>
+                    OK
+                </Button>
+            </DialogActions>
         </Dialog>
+
 
         <Toast ref={toast} />
 
