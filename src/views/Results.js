@@ -330,7 +330,7 @@ const Results = () => {
                         You have installed the <b>Free</b> version of PLanAI. Plan AI is currently syncing your Sales and Product data from shopify and creating your sales analytics Visualisations.
                     </Typography>
                     <Typography variant="subtitle1" style={{ fontStyle: 'normal', paddingTop: 7 }} >
-                        You will shortly <b>recieve an email</b> {`at  ${<u>Email</u>} containing the link and instructions to access you visualisations. Incase you do not recieve an email in the next 12 hours, kindly reach out to us using the contact us page.`}
+                        You will shortly <b>recieve an email</b> {`at  ${Email} containing the link and instructions to access you visualisations. Incase you do not recieve an email in the next 12 hours, kindly reach out to us using the contact us page.`}
                     </Typography>
                     <Typography variant="subtitle1" style={{ fontStyle: 'normal', paddingTop: 7, paddingBottom: 7 }}  >
                         Feel free to checkout the features PlanAI has to offer head over to the <b>upgrade plan</b> page using the side bar to upgrade your subscription plan to the paid version.

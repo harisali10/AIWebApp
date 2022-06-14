@@ -35,8 +35,7 @@ const UpgradePlan = (props) => {
         axios.post(`${constant.url}UpgradePlan`, { Header })
             .then(function (response) {
                 if (response.data.Success === true) {
-                    console.log({Message:response.data.Message})
-                    window.location(response.data.Message)
+                    window.location=response.data.Message
                     // toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'Setup Source Created!', life: 3000 });
                 }
                 else {
